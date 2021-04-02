@@ -18,6 +18,9 @@ I would also begin by creating the usual styling that I would also produce on my
 I noticed that the text felt a little too close to the surrounding border within the main section. I would like to keep the border around this part of the page to allow for a text-printout vibe. As though its an old type of adventure-text game. Where a designed text-box will sit and display to the user any outputs. For a solution instead of bring the text in using padding or any other form of styling I have chosen to use the text-align property to move the text and canvas to the center of the screen. I feel as though this choice helps the user be able to read the text a little more clear and properly seperates the text from the box.
 
 <h2>During Development</h2>
+Whilst trying to initially create the website. I had produced a website that just involved the canvas. There was an issue with the text with the font of my choice not correctly working on that canvas and from this conclusion I choice to remove the text from the canvas and try to externalize the text. I dont want to change the font as my idea originated form a visual thought of a page similar to this Dig game with this font.
+
+During production I had a few names in mind which was either dig up or dig out, or some form of dig related name. I wanted to try and just keep the name simple but effected. This name served a simple purpose for it too be a basic name that is easy to read and effective at showing the user what we are about. I rebelieve the title that I have sepected was in fact very fundementally self-explanitory, giving the user a little bit of a jokey catchy name.
 
 <h2>Finalizing</h2>
 
