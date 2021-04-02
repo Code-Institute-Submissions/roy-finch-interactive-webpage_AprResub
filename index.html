@@ -43,14 +43,28 @@
         </header>
         <main>
             <section>
-                <p>Test Text Test Text Test Text Test Text Test Text Test Text</p>
-                <canvas>This element is unsupported.</canvas>
+                <p id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</p>
+                <canvas id="display" onmousemove="init(event)">This element is unsupported.</canvas>
             </section>
         </main>
 
         <script>
-            function innit() {
-                
+            function init(e) {
+                var canvas = document.getElementById("display")
+                var canvasX = canvas.width;
+                var canvasY = canvas.height;
+                var boundMaxX = canvas.getBoundingClientRect().width;
+                var boundMaxY = canvas.getBoundingClientRect().height;
+                var boundMinX = canvas.getBoundingClientRect().left;
+                var boundMinY = canvas.getBoundingClientRect().top;
+
+                var scaleX = canvasX / boundMaxX;
+                var scaleY = canvasY / boundMaxY;
+
+                var mouseX = Math.round((e.clientX - boundMinX) * scaleX);
+                var mouseY = Math.round((e.clientY - boundMinY) * scaleY);
+
+                document.getElementById("textbox").innerHTML = mouseX+", "+mouseY+" || "+scaleX+", "+scaleY;
             }
         </script>
     </body>
