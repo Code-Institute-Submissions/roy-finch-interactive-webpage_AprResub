@@ -22,6 +22,8 @@ Whilst trying to initially create the website. I had produced a website that jus
 
 During production I had a few names in mind which was either dig up or dig out, or some form of dig related name. I wanted to try and just keep the name simple but effected. This name served a simple purpose for it too be a basic name that is easy to read and effective at showing the user what we are about. I rebelieve the title that I have sepected was in fact very fundementally self-explanitory, giving the user a little bit of a jokey catchy name.
 
+Also as the idea is to create a text box I have indented and centered the text in an effect to make the text presented as though its a script or spoken piece of text for the game. I want to do this as a way to display to the user that the external text is an actual output for the users actions and any reactions from the JavaScript.
+
 <h2>Finalizing</h2>
 
 <h2>Bibliography</h2>

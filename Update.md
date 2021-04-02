@@ -6,3 +6,4 @@ Noticing the centering feature of the alignment and also noticing how close the 
 I have also added a title to the website and altered the title that came with the intial setup of the webpage template.
 The bordering around the header is no longer needed. I will also begin to alter and change any of the other borders that may not be neccessary anymore. Going with the theme I would like to keep the border around the text box to display to the user a feeling as though this is like a texbox from a video game.
 I have began altering the sizes of the actual webpage to make sure that if fills in the entire real-estate of the page. I want to effectively use up most of the space so I can produce any theme that I would like to present to the user and effectively as well.
+Also added a text-indent to the section tag as this would allow for the text to have an indentation for later use as this would give the user a visual understanding that it is a text box.
