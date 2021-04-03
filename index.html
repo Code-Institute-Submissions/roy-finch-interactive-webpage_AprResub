@@ -36,7 +36,7 @@
             }
         </style>
     </head>
-    <body>
+    <body onmousemove="init(event)">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
@@ -44,25 +44,20 @@
         <main>
             <section>
                 <p id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</p>
-                <canvas id="display" onmousemove="init(event)">This element is unsupported.</canvas>
+                <canvas id="display">This element is unsupported.</canvas>
             </section>
         </main>
 
         <script>
+            const canvas = document.getElementById("display")
+            const rect = canvas.getBoundingClientRect()
+
+            var scaleX = canvas.width / rect.width;
+            var scaleY = canvas.height / rect.height;
+
             function init(e) {
-                var canvas = document.getElementById("display")
-                var canvasX = canvas.width;
-                var canvasY = canvas.height;
-                var boundMaxX = canvas.getBoundingClientRect().width;
-                var boundMaxY = canvas.getBoundingClientRect().height;
-                var boundMinX = canvas.getBoundingClientRect().left;
-                var boundMinY = canvas.getBoundingClientRect().top;
-
-                var scaleX = canvasX / boundMaxX;
-                var scaleY = canvasY / boundMaxY;
-
-                var mouseX = Math.round((e.clientX - boundMinX) * scaleX);
-                var mouseY = Math.round((e.clientY - boundMinY) * scaleY);
+                var mouseX = Math.round((e.clientX - rect.left) * scaleX);
+                var mouseY = Math.round((e.clientY - rect.top) * scaleY);
 
                 document.getElementById("textbox").innerHTML = mouseX+", "+mouseY+" || "+scaleX+", "+scaleY;
             }
