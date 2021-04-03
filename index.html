@@ -56,14 +56,14 @@
             var scaleY = canvas.height / rect.height;
 
             var getMouseX = function(e) {
-                return Math.round((e.clientX - rect.left) * scaleX);
+                return Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
             }
             var getMouseY = function(e) {
-                return Math.round((e.clientY - rect.top) * scaleY);
+                return Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
             }
 
             function init(e) {
-                document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY+" "+getMouseClick(e);
+                document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
             }
 
             function range(val, min, max) {
