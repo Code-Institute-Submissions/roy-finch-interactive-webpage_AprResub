@@ -36,7 +36,7 @@
             }
         </style>
     </head>
-    <body onmousemove="init(event)">
+    <body onmousemove="init(event); getMouseX(event); getMouseY(event);" onmousedown="getMouseClick(event)">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
@@ -55,11 +55,21 @@
             var scaleX = canvas.width / rect.width;
             var scaleY = canvas.height / rect.height;
 
-            function init(e) {
-                var mouseX = Math.round((e.clientX - rect.left) * scaleX);
-                var mouseY = Math.round((e.clientY - rect.top) * scaleY);
+            var getMouseX = function(e) {
+                return Math.round((e.clientX - rect.left) * scaleX);
+            }
+            var getMouseY = function(e) {
+                return Math.round((e.clientY - rect.top) * scaleY);
+            }
 
-                document.getElementById("textbox").innerHTML = mouseX+", "+mouseY+" || "+scaleX+", "+scaleY;
+            var getMouseClick = function(e) {
+                return true;
+            }
+
+            function init(e) {
+                document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY+" "+getMouseClick(e);
+
+                document.addKeyListener()
             }
         </script>
     </body>
