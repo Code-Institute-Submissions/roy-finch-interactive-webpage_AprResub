@@ -35,6 +35,10 @@ Also as the idea is to create a text box I have indented and centered the text i
 
 During development I noticed the idea begin to get rather ellaberate so I began to produce and create a help webpage that I filled in with any information that I felt as though would be benefactory to included about the webpage or/and the game.
 
+Throughout development I will continue to slowly add several different functions to the application and test each one. I want to make sure that each function that is added to this game works correctly and I try to produce a series of tests. I usually use different visual outputs. I usually use the textbox as a visual outputter so I can see in what part of the function or script there may be an error or it may not be running correctly. I try and make sure that I dont do too many changes without constantly updating the webpage and checking to see if the output matches exactly what I want the webpage to do. For the beginning of production I would always use the textbox as a visual output and once the core function of the site works I then add some of the other features.
+
+The range feature is a very helpful function that will be quiet helpful with most of the things that I am adding to this webpage. I want to make sure that data that is passed through is correctly altered and contained so that it doesnt begin to cause issues within the webpage.
+
 <h2>Finalizing</h2>
 
 <h2>Bibliography</h2>
