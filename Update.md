@@ -8,3 +8,4 @@ The bordering around the header is no longer needed. I will also begin to alter 
 I have began altering the sizes of the actual webpage to make sure that if fills in the entire real-estate of the page. I want to effectively use up most of the space so I can produce any theme that I would like to present to the user and effectively as well.
 Also added a text-indent to the section tag as this would allow for the text to have an indentation for later use as this would give the user a visual understanding that it is a text box.
 Begin by creating the initial function, I want to try and effectively begin the main script and also initialize the mouse listener. I want to try and create a function that can return the X and Y position of the mouse further in development as this can offer a better and more effective position getter.
+I am beginning by trying to create a very effective mouse position call out function and want to make the function suit what I would like to make.
