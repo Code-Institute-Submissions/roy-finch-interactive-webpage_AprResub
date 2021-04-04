@@ -52,8 +52,16 @@
             const canvas = document.getElementById("display")
             const rect = canvas.getBoundingClientRect()
 
-            var scaleX = canvas.width / rect.width;
-            var scaleY = canvas.height / rect.height;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const tileSizeX = 20;
+            const tileSizeY = 20;
+
+            const MapSizeX = (canvas.width * scaleX) / tileSizeX;
+            const MapSizeY = (canvas.height * scaleY) / tileSizeY;
+
+            let mapArray = [];
 
             var getMouseX = function(e) {
                 return Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
@@ -63,17 +71,55 @@
             }
 
             function init(e) {
-                document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
+                let mapArray = mapGenerator(2, 0, 200, MapSizeX, MapSizeY)
+                document.getElementById("textbox").innerHTML = str(mapArray)
+                // document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
             }
 
             function range(val, min, max) {
                 if (val > max) {
                     return max;
                 } else if (val < min) {
-                    return min
+                    return min;
                 } else {
-                    return val
+                    return val;
                 }
+            }
+
+            function mapGenerator(gradient, MinV, MaxV, MaxX, MaxY) {
+                let temp_array = [];
+                let x, y, r, diff;
+
+                for (x = 0; x < MaxX; x++) {
+                    for (y = 0; y < MaxY; y++) {
+                        temp_array[x][y] = MinV;
+                        document.getElementById("textbox").innerHTML = str(temp_array[x][y]);
+                    }
+                }
+
+                for (x = 0; x < MaxX; x++) {
+                    for (y = 0; y < MaxY; y++) {
+                        r = Math.random()*2-1;
+                        diff = Math.round(gradient*r);
+                        if (temp_array[x][y] <= 0) {
+                            temp_array[x][y] = range(temp_array[x][y]+diff, MinV, MaxV);
+                        }
+
+                        if (x-1 > 0) {
+                            temp_array[x-1][y] = range(temp_array[x-1][y]+diff, MinV, MaxV);
+                        }
+                        if (x+1 < MaxX) {
+                            temp_array[x+1][y] = range(temp_array[x+1][y]+diff, MinV, MaxV);
+                        }
+                        if (y-1 > 0) {
+                            temp_array[x][y-1] = range(temp_array[x][y-1]+diff, MinV, MaxV);
+                        }
+                        if (y+1 < MaxY) {
+                            temp_array[x][y+1] = range(temp_array[x][y+1]+diff, MinV, MaxV);
+                        }
+                    }
+                }
+                return  temp_array;
             }
         </script>
     </body>
