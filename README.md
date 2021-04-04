@@ -39,6 +39,8 @@ Throughout development I will continue to slowly add several different functions
 
 The range feature is a very helpful function that will be quiet helpful with most of the things that I am adding to this webpage. I want to make sure that data that is passed through is correctly altered and contained so that it doesnt begin to cause issues within the webpage.
 
+For each and every test I make sure that I create a feature or function and then begin to try and find where the function has ran into an error by using the texbox print out to find the exact location where it has stopped. Then effectivly you know which parts of the script are able to run and which parts have stoppped the code/script.
+
 <h2>Finalizing</h2>
 
 <h2>Bibliography</h2>
