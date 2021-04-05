@@ -11,6 +11,8 @@
                 font-family: "Courier new", "Cambria";
                 text-align: center;
                 margin: 20px;
+                min-width: 700px;
+                min-height: 500px;
             }
 
             header {
@@ -19,6 +21,8 @@
 
             canvas {
                 border: 1px solid black;
+                width: 50vw;
+                height: 30vw;
             }
 
             section {
@@ -61,10 +65,10 @@
             const scaleY = canvas.height / rect.height;
 
             // This is just a constant value of the size of each tile that will be printed to the screen, I have also locked the total amount of tiles that will be printed using the size constants that are set to 20 whilst I am in the early development.
-            const tileSizeX = 20;
-            const tileSizeY = 20;
-            const MapSizeX = Math.round((canvas.width * scaleX) / tileSizeX);
-            const MapSizeY = Math.round((canvas.height * scaleY) / tileSizeY);
+            const tileSizeX = 10;
+            const tileSizeY = 10;
+            const MapSizeX = Math.round((rect.width * scaleX) / tileSizeX);
+            const MapSizeY = Math.round((rect.height * scaleY) / tileSizeY);
 
             // This is an initialization of the mapArray so that it can hold the numerical values in the array format.
             let mapArray = [];
@@ -75,17 +79,37 @@
             let click = false;
             let keyCode;
 
+            const gameState = {
+                WELCOME: 1,
+                TUTORIAL_MESSAGE_ONE: 2,
+                TUTORIAL_MESSAGE_TWO: 3,
+                TUTORIAL_MESSAGE_THREE: 4,
+                TUTORIAL_MESSAGE_FOUR: 5,
+                TUTORIAL_MESSAGE_FIVE: 6,
+                TUTORIAL_MESSAGE_SIX: 7
+            };
+
+            function setGameState(state) {
+                // This is a function to try and create actions from changing the game state, I will try and use this effectivly to produce a textbox print out depending on the game_state.
+                switch (state) {
+                    case gameState.WELCOME:
+                        document.getElementById("textbox").innerHTML = "Welcome to my game"
+                }
+            }
+
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
+                mapArray = mapGenerator(5, 25, 75, MapSizeX, MapSizeY);
                 setInterval(main, 20);
                 // setInterval(draw, 20);
             }
 
             function main() {
+                /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                document.getElementById("textbox").innerHTML = click;
-                draw("rgb(0, 0, 200)", 20, 20, 100, 100);
+                mapRender(mapArray, MapSizeX, MapSizeY, tileSizeX, tileSizeY);
+                setGameState(1);
             }
 
             function MouseMove(e) {
@@ -166,6 +190,16 @@
                 }
                 // Once the entire multi-array has been created and randomly altered I then return this out of the function so that it can be called and casted to an external variable.
                 return tempMultiArray;
+            }
+
+            function mapRender(multi_array, MaxX, MaxY, SizeX, SizeY) {
+                let x, y, color;
+                for (x = 0; x < MaxX; x++) {
+                    for (y = 0; y < MaxY; y++) {
+                        color = "hsl(50, 75%, "+multi_array[x][y]+"%)"
+                        draw(color, x*SizeX, y*SizeY, SizeX, SizeY)
+                    }
+                }
             }
 
             function draw(color, x, y, size_x, size_y) {
