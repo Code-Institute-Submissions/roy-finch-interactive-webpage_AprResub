@@ -36,7 +36,7 @@
             }
         </style>
     </head>
-    <body onmousemove="MouseMove(event); init();" onkeypress="KeyPress(event)">
+    <body onmousemove="MouseMove(event); init();" onkeydown="KeyDown(event)" onkeyup="KeyUp()" onmousedown="MouseDown()" onmouseup="MouseUp()">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
@@ -54,7 +54,7 @@
             const rect = canvas.getBoundingClientRect()
 
             // I will create a variable called ctx which is "context" which will hold the drawn out products that are printed to the canvas. This will be needed for the draw and clear function.
-            let ctx = canvas.getContext("2d");
+            const ctx = canvas.getContext("2d");
 
             // Using the canvas and its hitbox I then create a scale factor of how big the actual canvas is currently being displayed at. This allows for me to change the actual size of the canvas and any following numerical data to make sure that I am using the correct data from the website that the user is using.
             const scaleX = canvas.width / rect.width;
@@ -63,8 +63,8 @@
             // This is just a constant value of the size of each tile that will be printed to the screen, I have also locked the total amount of tiles that will be printed using the size constants that are set to 20 whilst I am in the early development.
             const tileSizeX = 20;
             const tileSizeY = 20;
-            const MapSizeX = (canvas.width * scaleX) / tileSizeX;
-            const MapSizeY = (canvas.height * scaleY) / tileSizeY;
+            const MapSizeX = Math.round((canvas.width * scaleX) / tileSizeX);
+            const MapSizeY = Math.round((canvas.height * scaleY) / tileSizeY);
 
             // This is an initialization of the mapArray so that it can hold the numerical values in the array format.
             let mapArray = [];
@@ -72,12 +72,20 @@
             // These are the variables that will be used during outputs from the EventHandlers and will allow for me to get a public mouse location and a keyCode of the current buttom pressed.
             let mouseX = 0;
             let mouseY = 0;
+            let click = false;
             let keyCode;
 
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
-                document.getElementById("textbox").innerHTML = keyCode
-                // document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
+                setInterval(main, 20);
+                // setInterval(draw, 20);
+            }
+
+            function main() {
+                clear();
+
+                document.getElementById("textbox").innerHTML = click;
+                draw("rgb(0, 0, 200)", 20, 20, 100, 100);
             }
 
             function MouseMove(e) {
@@ -86,9 +94,14 @@
                 mouseY = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
             }
 
-            function KeyPress(e) {
-                // This function casts out the key that is pressed at one current time.
+            function KeyDown(e) {
+                // Will set the keyCode variable with the code of a key that is down.
                 keyCode = e.keyCode;
+            }
+
+            function MouseDown() {
+                // Will set the click variable to true to show that the mouse button is down.
+                click = true;
             }
 
             function range(val, min, max) {
@@ -156,7 +169,11 @@
             }
 
             function draw(color, x, y, size_x, size_y) {
-                // This is the draw function which only has a sole purpose to print out the tiles of the terrain that has been randomly generated. I will create a render function for the terrain which will widely use this function.
+                /* This is the draw function which only has a sole purpose to print out the tiles of the terrain that has been randomly generated. I will create a render function for the terrain which will widely use this function.
+
+                color - it will be the color value of the tile. It will be using the hsl() color function from css to allow for tiles to gain a form of difference in "lightness" to display to the user a sense of depth.
+                x and y - location of the tiles that are being printed.
+                size_x and size_y are the size of the tiles that will be printed. */
                 ctx.beginPath();
 
                 ctx.fillStyle = color;
@@ -166,6 +183,7 @@
             }
 
             function clear() {
+                // This function will clear the canvas when needed. This will allow for me to clear and reprint to the canvas if needed.
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         </script>
