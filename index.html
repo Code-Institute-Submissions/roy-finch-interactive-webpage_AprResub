@@ -21,8 +21,8 @@
 
             canvas {
                 border: 1px solid black;
-                width: 50vw;
-                height: 30vw;
+                width: 60vw;
+                height: 40vw;
             }
 
             section {
@@ -40,22 +40,26 @@
             }
         </style>
     </head>
-    <body onmousemove="MouseMove(event); init();" onkeydown="KeyDown(event)" onkeyup="KeyUp()" onmousedown="MouseDown()" onmouseup="MouseUp()">
+    <body onload="init();" onmousemove="MouseMove(event);" onkeydown="KeyDown(event)" onkeyup="KeyUp()" onmousedown="MouseDown()" onmouseup="MouseUp()">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
         </header>
         <main>
             <section>
-                <p id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</p>
+                <span id="name"></span>
+                <span id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</span>
+                <br>
                 <canvas id="display">This element is unsupported.</canvas>
             </section>
         </main>
 
         <script>
             // These two variables are the canvas located in the HTML and also the canvases rectangular hitbox
+            // I will also declare the textbox as a constant variable so I can alter its inner HTML easier.
             const canvas = document.getElementById("display")
             const rect = canvas.getBoundingClientRect()
+            const textbox = document.getElementById("textbox")
 
             // I will create a variable called ctx which is "context" which will hold the drawn out products that are printed to the canvas. This will be needed for the draw and clear function.
             const ctx = canvas.getContext("2d");
@@ -79,28 +83,33 @@
             let click = false;
             let keyCode;
 
-            const gameState = {
-                WELCOME: 1,
-                TUTORIAL_MESSAGE_ONE: 2,
-                TUTORIAL_MESSAGE_TWO: 3,
-                TUTORIAL_MESSAGE_THREE: 4,
-                TUTORIAL_MESSAGE_FOUR: 5,
-                TUTORIAL_MESSAGE_FIVE: 6,
-                TUTORIAL_MESSAGE_SIX: 7
+            // A container for the current state on which the game is at so that the script knows what to do depending on the state.
+            let gameState = 0;
+
+            // This is a container with all of the possible gameStates that can be assigned to gameState, I use a numerical value for the state variable and have this function to give a name to what that numerical value stands for. I will then also organise these different numbers into groups depending on what they may include or do. Example, tutorial will have several messages that can be displayed to the screen.
+            const gameStates = {
+                WELCOME: 0,
+                TUTORIAL: {
+                    MESSAGE_ONE: 1,
+                    MESSAGE_ONE: 2,
+                    MESSAGE_ONE: 3,
+                    MESSAGE_ONE: 4,
+                    MESSAGE_ONE: 5,
+                    MESSAGE_ONE: 6
+                },
+                MENUS: {
+                    MENU_ONE: 7
+                }
             };
 
-            function setGameState(state) {
-                // This is a function to try and create actions from changing the game state, I will try and use this effectivly to produce a textbox print out depending on the game_state.
-                switch (state) {
-                    case gameState.WELCOME:
-                        document.getElementById("textbox").innerHTML = "Welcome to my game"
-                }
-            }
+            const textboxMessages = ["Hello", "Who", "Are", "You"]
 
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
                 mapArray = mapGenerator(5, 25, 75, MapSizeX, MapSizeY);
                 setInterval(main, 20);
+                
+                // setGameState(1);
                 // setInterval(draw, 20);
             }
 
@@ -108,8 +117,20 @@
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                mapRender(mapArray, MapSizeX, MapSizeY, tileSizeX, tileSizeY);
-                setGameState(1);
+                textbox.innerHTML = textboxMessages[gameState]
+
+                if (click) {
+                    if (gameState < gameStates.MENUS.MENU_ONE) {
+                        gameState += 1
+                    } else {
+                        textbox.innerHTML = "TUTORIAL IS NOW DONE."
+                    }
+                    click = false;
+                }
+
+                if (gameState == gameStates.TUTORIAL.MESSAGE_TWO) {
+                    mapRender(mapArray, MapSizeX, MapSizeY, tileSizeX, tileSizeY)
+                }
             }
 
             function MouseMove(e) {
