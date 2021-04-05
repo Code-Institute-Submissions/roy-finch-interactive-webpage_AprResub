@@ -18,3 +18,4 @@ After creating and posting my function to generate the terrain I notice that it 
 Whilst testing this document, I noticed an issue with the way on which I get the users position I will continue to try and work out a way on which I can monitor the users position but also be able to aquire that value without needing the event as a condition to the function.
 I have changed the function to allow for me to be able to call the function out and normally update the Mouse Pos variables. I can then also use these values now during my script.
 I have commented across the script to be able to tell people what the script does and the purpose to everything included.
+I now want to create a draw and clear function to be able to print out what I want to print out to the canvas. I will use a function provided by JS to get the context of the canvas and begin to draw to the canvas.
