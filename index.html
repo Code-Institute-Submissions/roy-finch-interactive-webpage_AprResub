@@ -53,6 +53,9 @@
             const canvas = document.getElementById("display")
             const rect = canvas.getBoundingClientRect()
 
+            // I will create a variable called ctx which is "context" which will hold the drawn out products that are printed to the canvas. This will be needed for the draw and clear function.
+            let ctx = canvas.getContext("2d");
+
             // Using the canvas and its hitbox I then create a scale factor of how big the actual canvas is currently being displayed at. This allows for me to change the actual size of the canvas and any following numerical data to make sure that I am using the correct data from the website that the user is using.
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
@@ -100,8 +103,13 @@
             }
 
             function mapGenerator(gradient, MinV, MaxV, MaxX, MaxY) {
-                var tempMultiArray = [];
-                var tempArray = [];
+                /* This function is used to create and generate a random two dimensional array which takes specific conditions.
+
+                gradient - this is the amount general progression of the values on the multi-array this is how the value will begin to alter.
+                MinV and MaxV - these are just restrictive containers for the values to remain inbetween a range that can be external altered or changed.
+                MaxX and MaxY - this is how long you would like to make the array, this is if you want to make the map bigger or smaller depending on these two values. They define how long the for loops will run for. */
+                let tempMultiArray = [];
+                let tempArray = [];
                 let x, y, r, diff;
 
                 for (x = 0; x < MaxX; x++) {
@@ -145,6 +153,20 @@
                 }
                 // Once the entire multi-array has been created and randomly altered I then return this out of the function so that it can be called and casted to an external variable.
                 return tempMultiArray;
+            }
+
+            function draw(color, x, y, size_x, size_y) {
+                // This is the draw function which only has a sole purpose to print out the tiles of the terrain that has been randomly generated. I will create a render function for the terrain which will widely use this function.
+                ctx.beginPath();
+
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, size_x, size_y);
+
+                ctx.stroke();
+            }
+
+            function clear() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
         </script>
     </body>
