@@ -36,7 +36,7 @@
             }
         </style>
     </head>
-    <body onmousemove="setMouse(event); init();">
+    <body onmousemove="MouseMove(event); init();" onkeypress="KeyPress(event)">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
@@ -49,31 +49,43 @@
         </main>
 
         <script>
+            // These two variables are the canvas located in the HTML and also the canvases rectangular hitbox
             const canvas = document.getElementById("display")
             const rect = canvas.getBoundingClientRect()
 
+            // Using the canvas and its hitbox I then create a scale factor of how big the actual canvas is currently being displayed at. This allows for me to change the actual size of the canvas and any following numerical data to make sure that I am using the correct data from the website that the user is using.
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
 
+            // This is just a constant value of the size of each tile that will be printed to the screen, I have also locked the total amount of tiles that will be printed using the size constants that are set to 20 whilst I am in the early development.
             const tileSizeX = 20;
             const tileSizeY = 20;
-
             const MapSizeX = (canvas.width * scaleX) / tileSizeX;
             const MapSizeY = (canvas.height * scaleY) / tileSizeY;
 
+            // This is an initialization of the mapArray so that it can hold the numerical values in the array format.
             let mapArray = [];
 
+            // These are the variables that will be used during outputs from the EventHandlers and will allow for me to get a public mouse location and a keyCode of the current buttom pressed.
             let mouseX = 0;
             let mouseY = 0;
+            let keyCode;
 
             function init() {
-                document.getElementById("textbox").innerHTML = mouseX+" "+mouseY
+                // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
+                document.getElementById("textbox").innerHTML = keyCode
                 // document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
             }
 
-            function setMouse(e) {
+            function MouseMove(e) {
+                // This function will cast out the users position relative to the canvas. This is done by taking the users X or Y and then finding the location of the canvas and the rectangular hitbox. This is then rounded afterwards.
                 mouseX = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
                 mouseY = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
+            }
+
+            function KeyPress(e) {
+                // This function casts out the key that is pressed at one current time.
+                keyCode = e.keyCode;
             }
 
             function range(val, min, max) {
