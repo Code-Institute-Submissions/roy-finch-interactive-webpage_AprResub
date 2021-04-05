@@ -19,3 +19,4 @@ Whilst testing this document, I noticed an issue with the way on which I get the
 I have changed the function to allow for me to be able to call the function out and normally update the Mouse Pos variables. I can then also use these values now during my script.
 I have commented across the script to be able to tell people what the script does and the purpose to everything included.
 I now want to create a draw and clear function to be able to print out what I want to print out to the canvas. I will use a function provided by JS to get the context of the canvas and begin to draw to the canvas.
+I have tested the draw and clear function by using both of them seperate. I simply just printed a rectangle first and then began to add color afterwards. I then tested the clear function and it works as if its placed after the draw function it begins to clear the canvas.

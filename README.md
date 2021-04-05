@@ -41,7 +41,7 @@ The range feature is a very helpful function that will be quiet helpful with mos
 
 For each and every test I make sure that I create a feature or function and then begin to try and find where the function has ran into an error by using the texbox print out to find the exact location where it has stopped. Then effectivly you know which parts of the script are able to run and which parts have stoppped the code/script.
 
-Also during testing I always try and make sure that the functionality of the website is key. I want to make sure that the website will always behave as intended. This is by tracking each action and function to find if there is any issues or incorrect actions a function may be doing. I want to make sure that the foundation of the website is as strong as the overal product. Make sure that the beginning interactive-functions in the website are correct will allow for me to begin to make sure that user inputs are being tracked and used correctly.
+Also during testing I always try and make sure that the functionality of the website is key. I want to make sure that the website will always behave as intended. This is by tracking each action and function to find if there is any issues or incorrect actions a function may be doing. I want to make sure that the foundation of the website is as strong as the overal product. Make sure that the beginning interactive-functions in the website are correct will allow for me to begin to make sure that user inputs are being tracked and used correctly. Whilst testing the draw functions I made sure that I was able to use them for a simple action like printing a blue square on the canvas.
 
 <h2>Finalizing</h2>
 
