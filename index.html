@@ -90,15 +90,10 @@
             const gameStates = {
                 WELCOME: 0,
                 TUTORIAL: {
-                    MESSAGE_ONE: 1,
-                    MESSAGE_ONE: 2,
-                    MESSAGE_ONE: 3,
-                    MESSAGE_ONE: 4,
-                    MESSAGE_ONE: 5,
-                    MESSAGE_ONE: 6
+                    MESSAGE_ONE: 1
                 },
                 MENUS: {
-                    MENU_ONE: 7
+                    MENU_ONE: 2
                 }
             };
 
@@ -117,7 +112,7 @@
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                textbox.innerHTML = textboxMessages[gameState]
+                textbox.innerHTML = textboxMessages[gameState]+"<br> Please click with your mouse to continue.";
 
                 if (click) {
                     if (gameState < gameStates.MENUS.MENU_ONE) {
