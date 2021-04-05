@@ -71,12 +71,12 @@
             }
 
             function init(e) {
-                let mapArray = mapGenerator(2, 0, 200, MapSizeX, MapSizeY)
-                document.getElementById("textbox").innerHTML = str(mapArray)
+                document.getElementById("textbox").innerHTML = mapGenerator(20, 0, 200, MapSizeX, MapSizeY)
                 // document.getElementById("textbox").innerHTML = getMouseX(e)+", "+getMouseY(e)+" || "+scaleX+", "+scaleY;
             }
 
             function range(val, min, max) {
+                // I created this function to control the values that will be used within my website. This is to help with numerical data controls and to allow for me to keep a "lid" on the values that will be present within my game.
                 if (val > max) {
                     return max;
                 } else if (val < min) {
@@ -87,39 +87,51 @@
             }
 
             function mapGenerator(gradient, MinV, MaxV, MaxX, MaxY) {
-                let temp_array = [];
+                var tempMultiArray = [];
+                var tempArray = [];
                 let x, y, r, diff;
 
                 for (x = 0; x < MaxX; x++) {
                     for (y = 0; y < MaxY; y++) {
-                        temp_array[x][y] = MinV;
-                        document.getElementById("textbox").innerHTML = str(temp_array[x][y]);
+                        tempArray.push(MinV);
                     }
+                    tempMultiArray.push(tempArray);
+                    tempArray = [];
                 }
 
                 for (x = 0; x < MaxX; x++) {
                     for (y = 0; y < MaxY; y++) {
-                        r = Math.random()*2-1;
-                        diff = Math.round(gradient*r);
-                        if (temp_array[x][y] <= 0) {
-                            temp_array[x][y] = range(temp_array[x][y]+diff, MinV, MaxV);
+                        r = (Math.random()*2)-1;
+                        diff = gradient*r;
+                        // I use r as a random numeric value variable with this value I then times it by 2 and then -1 this can then provide me with a value that is either -0.9 or 0.9 which will allow for me to be able to change the value that will be applied to the diff variable. Diff is the difference that needs to be applied to the chosen tile of the array and will alalow for me to either accend or decent that tile by the current amount that is present. This allows for the terrain to gain a random but effective difference in depth. Along with this the random value that is created modifies the gradient variable that is given though the function. This is how you can customise how must the terrain can change in altitute. Gradient represents the overal height difference you would like to see in your terrain.
+                        
+                        if (tempMultiArray[x][y]+diff < MaxV && tempMultiArray[x][y]+diff > MinV) {
+                            // After checking if I can alter the chosen tile with the difference then I will begin to change the tile by the difference that has been selected. This can allow for me to continue to modify each tile depending on the choicen difference.
+                            tempMultiArray[x][y] = Math.round(tempMultiArray[x][y]+diff);
                         }
 
-                        if (x-1 > 0) {
-                            temp_array[x-1][y] = range(temp_array[x-1][y]+diff, MinV, MaxV);
+                        /* I then after modifing the original selected tile begin to modify any tiles that are adjacent to this selected tile. I first check if there is a tile in either the positive or negative position to the main one and then do an average of the main tile and the tile that is select. After the average of those two values I then change that tile by the difference.
+                        I begin by taking the value of the adjacent tile, altering by the selected difference and once I alter that I take the value from the original center tile and average both of their values together to create a slightly flatter and more progressive terrain.
+                        */
+
+                        if (x+1 < MaxX && tempMultiArray[x+1][y]+diff < MaxV && tempMultiArray[x+1][y]+diff > MinV) {
+                            // This is the tile that is to the right of the chosen tile and is modified in the way stated in the previous comment.
+                            tempMultiArray[x+1][y] = Math.round(((tempMultiArray[x+1][y]+diff)+tempMultiArray[x][y])/2);
+
                         }
-                        if (x+1 < MaxX) {
-                            temp_array[x+1][y] = range(temp_array[x+1][y]+diff, MinV, MaxV);
+                        if (x-1 > 0 && tempMultiArray[x-1][y]+diff < MaxV && tempMultiArray[x-1][y]+diff > MinV) {
+                            tempMultiArray[x-1][y] = Math.round(((tempMultiArray[x-1][y]+diff)+tempMultiArray[x][y])/2);
                         }
-                        if (y-1 > 0) {
-                            temp_array[x][y-1] = range(temp_array[x][y-1]+diff, MinV, MaxV);
+                        if (y+1 < MaxY && tempMultiArray[x][y+1]+diff < MaxV && tempMultiArray[x][y+1]+diff > MinV) {
+                            tempMultiArray[x][y+1] = Math.round(((tempMultiArray[x][y+1]+diff)+tempMultiArray[x][y])/2);
                         }
-                        if (y+1 < MaxY) {
-                            temp_array[x][y+1] = range(temp_array[x][y+1]+diff, MinV, MaxV);
+                        if ( y-1 > 0 && tempMultiArray[x][y-1]+diff < MaxV && tempMultiArray[x][y-1]+diff > MinV) {
+                            tempMultiArray[x][y-1] = Math.round(((tempMultiArray[x][y-1]+diff)+tempMultiArray[x][y])/2);
                         }
                     }
                 }
-                return  temp_array;
+                // Once the entire multi-array has been created and randomly altered I then return this out of the function so that it can be called and casted to an external variable.
+                return tempMultiArray;
             }
         </script>
     </body>
