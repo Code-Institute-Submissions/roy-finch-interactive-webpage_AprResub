@@ -83,48 +83,130 @@
             let click = false;
             let keyCode;
 
-            // A container for the current state on which the game is at so that the script knows what to do depending on the state.
-            let gameState = 0;
+            // Let a variable be equal to 0 to hold the value of which one is selected.
+            let selectedMenuOption = 0;
+            let selectedOptionDifference = 0;
+            // the chosen menu option will take the value of the selected menu option when the user presses a button like enter or space or uses the mouse.
+            let chosenMenuOption = -1;
 
             // This is a container with all of the possible gameStates that can be assigned to gameState, I use a numerical value for the state variable and have this function to give a name to what that numerical value stands for. I will then also organise these different numbers into groups depending on what they may include or do. Example, tutorial will have several messages that can be displayed to the screen.
             const gameStates = {
                 WELCOME: 0,
                 TUTORIAL: {
-                    MESSAGE_ONE: 1
+                    MESSAGE_ONE: 1,
+                    MESSAGE_TWO: 2,
+                    MESSAGE_THREE: 3,
+                    MESSAGE_FOUR: 4,
+                    MESSAGE_FIVE: 5,
+                    MESSAGE_SIX: 6,
+                    MESSAGE_SEVEN: 7,
+                    MESSAGE_EIGHT: 8
                 },
-                MENUS: {
-                    MENU_ONE: 2
-                }
+                MAIN_MENU: 9,
+                BIOME_MENU: 10,
+                MUSEUM_MENU: 11,
+                INVENTORY_SCREEN: 12,
+                UPGRADE_MENU: 13,
+                RENDER_TERRAIN: 14,
+                GAME_BEGIN: 15
             };
 
-            const textboxMessages = ["Hello", "Who", "Are", "You"]
+            // A container for the current state on which the game is at so that the script knows what to do depending on the state.
+            let gameState
+
+            const textboxMessages = ["Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You"]
+            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp"], ["Process"]]
 
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
-                mapArray = mapGenerator(5, 25, 75, MapSizeX, MapSizeY);
                 setInterval(main, 20);
+
+                gameState = 9;
                 
                 // setGameState(1);
                 // setInterval(draw, 20);
+            }
+
+            function MenuPrintout(array, selectedItem) {
+                // This will be a basic function that will create an array and be given a chosen item and return the string print out of the list with a selected item in bold.
+                let i;
+                let temp_string = "";
+                for (i = 0; i < array.length; i++) {
+                    if (i == selectedItem) {
+                        temp_string = temp_string+"<br><b>"+array[i]+"</b>"
+                    } else {
+                        temp_string = temp_string+"<br>"+array[i]
+                    }
+                }
+                return temp_string
             }
 
             function main() {
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                textbox.innerHTML = textboxMessages[gameState]+"<br> Please click with your mouse to continue.";
+                textbox.innerHTML = textboxMessages[gameState]
 
-                if (click) {
-                    if (gameState < gameStates.MENUS.MENU_ONE) {
-                        gameState += 1
-                    } else {
-                        textbox.innerHTML = "TUTORIAL IS NOW DONE."
+                if (keyCode > 0) {
+                    if (keyCode == 87) {
+                        selectedOptionDifference = -1;
                     }
-                    click = false;
+                    if (keyCode == 83) {
+                        selectedOptionDifference = 1;
+                    }
+                    if (keyCode == 13 || keyCode == 32) {
+                        chosenMenuOption = selectedMenuOption
+                    }
+                    keyCode = 0
                 }
 
-                if (gameState == gameStates.TUTORIAL.MESSAGE_TWO) {
-                    mapRender(mapArray, MapSizeX, MapSizeY, tileSizeX, tileSizeY)
+                if (selectedOptionDifference != 0) {
+                    selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[0].length-1);
+                    selectedOptionDifference = 0;
+                }
+
+                if (gameState == gameStates.MAIN_MENU) {
+                    textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[0], selectedMenuOption);
+                    if (chosenMenuOption != -1) {
+                        gameState = gameState+chosenMenuOption+1
+                        chosenMenuOption = -1
+                    }
+                }
+
+                if (gameState == gameStates.BIOME_MENU) {
+                    textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[1], selectedMenuOption);
+                    if (chosenMenuOption != -1) {
+                        gameState = 14;
+                        biomeType = getBiomeVal(chosenMenuOption);
+                    }
+                }
+
+                // textbox.innerHTML = textboxMessages[gameState]+"<br> Please click with your mouse to continue.";
+
+                // if (click) {
+                //     if (gameState < gameStates.MENUS.MENU_ONE) {
+                //         gameState += 1
+                //     } else if (gameState == gameStates.Menu.MENU_ONE) {
+                //         textbox.innerHTML = MenuPrintout(MenuOptions[0], 0);
+                //     }
+                //     click = false;
+                // }
+
+                if (gameState == gameStates.RENDER_TERRAIN) {
+                    // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built.
+                    mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
+                    gameState = 15
+                }
+
+                if (mapArray != []) {
+                    mapRender(mapArray, biomeType[3], MapSizeX, MapSizeY, tileSizeX, tileSizeY)
+                }
+            }
+
+            function getBiomeVal(val) {
+                // Returns the corresponding values depending on what the users has chosen for the terrain type. This will return the gradient, minV, maxV and a color set up, this is the beginning of a hsl() value including the hue and saturation and the lightness will be created externally by the value set up by the mapGeneration function. This lets me set up a color variation in the terrain.
+                if (val == 0) {
+                    return [5, 40, 75, "hsl(20, 40%, "]
                 }
             }
 
@@ -208,11 +290,11 @@
                 return tempMultiArray;
             }
 
-            function mapRender(multi_array, MaxX, MaxY, SizeX, SizeY) {
+            function mapRender(multi_array, biomeColor, MaxX, MaxY, SizeX, SizeY) {
                 let x, y, color;
                 for (x = 0; x < MaxX; x++) {
                     for (y = 0; y < MaxY; y++) {
-                        color = "hsl(50, 75%, "+multi_array[x][y]+"%)"
+                        color = biomeColor+multi_array[x][y]+"%)"
                         draw(color, x*SizeX, y*SizeY, SizeX, SizeY)
                     }
                 }
