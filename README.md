@@ -43,6 +43,10 @@ For each and every test I make sure that I create a feature or function and then
 
 Also during testing I always try and make sure that the functionality of the website is key. I want to make sure that the website will always behave as intended. This is by tracking each action and function to find if there is any issues or incorrect actions a function may be doing. I want to make sure that the foundation of the website is as strong as the overal product. Make sure that the beginning interactive-functions in the website are correct will allow for me to begin to make sure that user inputs are being tracked and used correctly. Whilst testing the draw functions I made sure that I was able to use them for a simple action like printing a blue square on the canvas.
 
+When creating the terrain generation I liked my init() function to the movement of my mouse to be able to produce a new peice of terrain to make sure that it continued to work. Now that that is tested I can now work on the menu what will be displayed to the textbox. Using hsl color function of the CSS I can also display to the user thought the canvas a form of depth within the terrain.
+
+Whilst trying to create the function to display the nodes I had not noticed that I had wrongly set the hsl color function to an incorrect value and not completed the functions structure. Instead of hsl(#, #%, #%) I had missed a comma. During testing to try and find this issue I had printed to the textbox the color function in draw until I noticed the issue and found that I had wrongly structure the color hsl function. Testing is key within the development as you can make a series of unexpected, mistakes that although simple are beyond effective at stopping the script or running incorrectly.
+
 <h2>Finalizing</h2>
 
 <h2>Bibliography</h2>
