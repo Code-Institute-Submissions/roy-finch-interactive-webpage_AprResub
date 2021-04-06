@@ -95,7 +95,7 @@
 
             // Create an array to hold the positions of the users attempts on digging in the terrain. Also a variable used to hold the users attempts within the terrain. This can be effected and increased by the upgrades later.            
             let usersPosArray = [];
-            let usersAttempts = 3;
+            let usersAttempts = 0;
 
             // A time variable to count up or down the length of the time that the points of interests that are displayed.
             let nodeDisplayTime;
@@ -126,7 +126,9 @@
                 UPGRADE_MENU: 13,
                 RENDER_TERRAIN: 14,
                 RENDER_NODES: 15,
-                BEGIN_GAME: 16
+                BEGIN_GAME: 16,
+                DISPLAY_DIGGOUTS: 17,
+                BEGIN_SEQUENCE: 18
             };
 
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
@@ -178,6 +180,16 @@
                     keyCode = 0
                 }
 
+                if (click) {
+                    if (gameState == gameStates.BEGIN_GAME && usersAttempts > 0) {
+                        usersPosArray.push(mouseX);
+                        usersPosArray.push(mouseY);
+                        usersAttempts -= 1
+                    }
+                    
+                    click = false;
+                }
+
                 if (selectedOptionDifference != 0) {
                     selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[0].length-1);
                     selectedOptionDifference = 0;
@@ -197,6 +209,8 @@
                     if (chosenMenuOption != -1) {
                         gameState = 14; // GameState change to RENDER TERRAIN
                         biomeType = getBiomeVal(chosenMenuOption);
+                        nodeDisplayTime = 100
+                        usersAttempts = 3
                     }
                 }
 
@@ -204,7 +218,6 @@
                     // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built. Also generate a series of Positions for the nodes.
                     mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
                     nodePosArray = nodeGenerator((usersAttempts*2));
-                    nodeDisplayTime = 100
                     gameState = 15 // gameState is equal to display nodes
                 }
 
@@ -214,12 +227,20 @@
                     gameState = 16 // GameState is equal to begin game.
                 }
 
+                if (usersAttempts > 0) {
+                    textbox.innerHTML = textbox.innerHTML+"<br>You have got "+usersAttempts+" attempts remaining.";
+                } else (gameState == gameStates.DISPLAY_DIGGOUTS) {
+                    // Create a function that will display the locations the user has selected.
+                }
+
                 if (mapArray != []) {
                     // This will render to the canvas if the mapArray contains some mappable data.
                     mapRender(mapArray, biomeType[3], MapSizeX, MapSizeY, tileSizeX, tileSizeY);
-                    if (gameState == gameStates.RENDER_NODES) {
-                        nodeRender(nodePosArray);
-                    }
+                }
+
+                if (gameState == gameStates.RENDER_NODES) {
+                    // This will render the nodes until the gamemode is changed.
+                    nodeRender(nodePosArray);
                 }
             }
 
