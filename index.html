@@ -189,38 +189,51 @@
                 }
 
                 if (gameState == gameStates.BIOME_MENU) {
+                    // This will check if the gameState is the biome menu and will display the options on the terrain. It will then print out the menu, and then check if the player has selected or chosen an option and change the game state to RENDER TERRAIN, once changed will obtain data on the terrain that has been chosen.
                     textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[1], selectedMenuOption);
                     if (chosenMenuOption != -1) {
-                        gameState = 14;
+                        gameState = 14; // GameState change to RENDER TERRAIN
                         biomeType = getBiomeVal(chosenMenuOption);
                     }
                 }
 
                 if (gameState == gameStates.RENDER_TERRAIN) {
-                    // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built.
+                    // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built. Also generate a series of Positions for the nodes.
                     mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
-                    nodePosArray = nodeGenerator(usersAttempts*2);
+                    nodePosArray = nodeGenerator((usersAttempts*2));
                     gameState = 15
                 }
 
-                if (gameState == gameStates.RENDER_NODES) {
-                    nodeRender(array)
-                }
-
                 if (mapArray != []) {
+                    // This will render to the canvas if the mapArray contains some mappable data.
                     mapRender(mapArray, biomeType[3], MapSizeX, MapSizeY, tileSizeX, tileSizeY)
+                    if (gameState == gameStates.RENDER_NODES) {
+                        nodeRender(nodePosArray);
+                    }
                 }
             }
 
             function nodeGenerator(num) {
                 // This function will create a series of random position that can easily be displayed on the canvas temparerily for the user. It returns the values which is a long singular array of x,y,x,y,x,y,x,y which will be interpreted as this structure by a nodeRender function.
-                let i;
+                let i, x, y;
                 let temp_pos = []
-                for (i = 0; i < num*2; i = i+2) {
-                    temp_pos.push(range(Math.round(Math.random()*rect.width * scaleX), nodeSizeX, rect.width * scaleX - nodeSizeX))
-                    temp_pos.push(range(Math.round(Math.random()*rect.height * scaleY), nodeSizeY, rect.height * scaleY - nodeSizeY))
+                for (i = 0; temp_pos.length != num*2; i = i+2) {
+                    x = range(Math.round(Math.random()*rect.width*scaleX), nodeSizeX, rect.width*scaleY-nodeSizeX)
+                    y = range(Math.round(Math.random()*rect.height*scaleY), nodeSizeY, rect.height*scaleY-nodeSizeY)
+                    if (temp_pos.indexOf(x) == -1 && temp_pos.indexOf(y) == -1) {
+                        temp_pos.push(x)
+                        temp_pos.push(y)
+                    }
                 }
                 return temp_pos
+            }
+
+            function nodeRender(array) {
+                // This function is used to generate the location of the nodes that have been created on the terrain. This shows the points as locations prepresented on the canvas. Taking the array in a singular array and in the way of x,y,x,y layout.
+                let i;
+                for (i = 0; i < array.length; i = i+2) {
+                    draw("hsl(0, 0% 0%)", array[i]-(nodeSizeX/2), array[i+1]-(nodeSizeY/2), nodeSizeX, nodeSizeY);
+                }
             }
 
             function getBiomeVal(val) {
