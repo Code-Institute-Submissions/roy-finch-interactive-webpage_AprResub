@@ -105,6 +105,12 @@
             let nodeDisplayTime;
             let sequenceDisplayTime;
 
+            // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
+            let usersInventory = [];
+
+            // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
+            let usersToolbelt = [1, 1, 1];
+
             // Let a variable be equal to 0 to hold the value of which one is selected.
             let selectedMenuOption = 0;
             let selectedOptionDifference = 0;
@@ -140,8 +146,13 @@
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
             let gameState
 
+            // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
+
             const textboxMessages = ["Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You"]
             const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp"], ["Process"]]
+
+            // This is an array of all the common items within the game
+            const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
 
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
@@ -289,9 +300,19 @@
                     gameState = 19
                 }
                 
-                if (usersSequence.length == randomSequence.length) {
+                if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
                     // add a function to test if both variables are the same.
-                    textbox.innerHTML = ArraySimilarity(usersSequence, randomSequence)
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+ArraySimilarity(usersSequence, randomSequence)
+                }
+            }
+
+            function addItemToInventory(item, quantity) {
+                // This will add an item to the inventory which is either rare and obtained from a node, or will add an item thats not in the inventory. If the item is common then it will just add the quantity to the entry within the inventory.
+                if (commonItems.indexOf(item) == -1 || usersInventory.indexOf(item) == -1) {
+                    usersInventory.push(item)
+                    usersInventory.push(quantity)
+                } else if (usersInventory.indexOf(item) != -1) {
+                    usersInventory[usersInventory.indexOf(item)+1] = usersInventory[usersInventory.indexOf(item)+1]+quantity
                 }
             }
 
