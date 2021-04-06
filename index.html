@@ -183,6 +183,7 @@
                 clear();
 
                 textbox.innerHTML = textboxMessages[gameState]
+                textbox.innerHTML = gameState
 
                 if (keyCode > 0) {
                     if (keyCode == 87) {
@@ -241,7 +242,7 @@
                     // This will check if the gameState is the biome menu and will display the options on the terrain. It will then print out the menu, and then check if the player has selected or chosen an option and change the game state to RENDER TERRAIN, once changed will obtain data on the terrain that has been chosen.
                     textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[1], selectedMenuOption);
                     if (chosenMenuOption != -1) {
-                        gameState = 14; // GameState change to RENDER TERRAIN
+                        gameState = gameStates.RENDER_TERRAIN; // GameState change to RENDER TERRAIN
                         biomeType = getBiomeVal(chosenMenuOption);
                         nodeDisplayTime = 100
                         usersAttempts = 3
@@ -252,17 +253,19 @@
                     // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built. Also generate a series of Positions for the nodes.
                     mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
                     nodePosArray = nodeGenerator((usersAttempts*2));
-                    gameState = 15 // gameState is equal to display nodes
+                    gameState = gameStates.RENDER_NODES // gameState is equal to display nodes
                 }
 
-                if (nodeDisplayTime > 0) {
-                    nodeDisplayTime -= 1
-                } else if (nodeDisplayTime == 0) {
-                    gameState = 16 // GameState is equal to begin game.
+                if (gameState == gameStates.RENDER_NODES || gameState == gameStates.REPEAT_SEQUENCE) {
+                    if (nodeDisplayTime > 0) {
+                        nodeDisplayTime -= 1
+                    } else if (nodeDisplayTime == 0) {
+                        gameState = gameStates.BEGIN_GAME // GameState is equal to begin game.
+                    }
                 }
 
                 if (gameState == gameStates.BEGIN_GAME && usersAttempts == 0) {
-                    gameState = 17;
+                    gameState = gameStates.DISPLAY_DIGGOUTS;
                 }
 
                 if (usersAttempts > 0) {
@@ -282,9 +285,10 @@
                 if (gameState == gameStates.DISPLAY_DIGGOUTS || gameState == gameStates.BEGIN_SEQUENCE) {
                     // Create a function that will display the locations the user has selected.
                     nodeRender(usersPosArray);
-                    if (gameState == gameStates.DISPLAY_DIGGOUTS) {
-                        gameState = gameStates.BEGIN_SEQUENCE;
-                    }
+                }
+
+                if (gameState == gameStates.DISPLAY_DIGGOUTS) {
+                    gameState = gameStates.BEGIN_SEQUENCE;
                 }
 
                 if (randomSequence.length == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
@@ -297,12 +301,27 @@
                     textbox.innerHTML = textbox.innerHTML+"<br>"+randomSequence
                     sequenceDisplayTime -= 1
                 } else if (sequenceDisplayTime == 0) {
-                    gameState = 19
+                    gameState = gameStates.REPEAT_SEQUENCE
+                }
+
+                if (usersSequence.length > 0) {
+                    textbox.innerHTML = textbox.innerHTML+usersSequence
                 }
                 
                 if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
-                    // add a function to test if both variables are the same.
-                    textbox.innerHTML = textbox.innerHTML+"<br>"+ArraySimilarity(usersSequence, randomSequence)
+                    // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
+                    textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."+usersInventory
+                    addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence))
+                    usersPosArray.shift()
+                    usersPosArray.shift()
+                    usersSequence = [];
+                    randomSequence.length = [];
+                    if (usersPosArray.length <= 0) {
+                        // Change the game state back to the main menu
+                        mapArray = [];
+                        chosenMenuOption = -1;
+                        gameState = gameStates.MAIN_MENU;
+                    }
                 }
             }
 
@@ -313,6 +332,21 @@
                     usersInventory.push(quantity)
                 } else if (usersInventory.indexOf(item) != -1) {
                     usersInventory[usersInventory.indexOf(item)+1] = usersInventory[usersInventory.indexOf(item)+1]+quantity
+                }
+            }
+
+            function addRandomItem(biome, quality) {
+                if (biome == 0) {
+                    r = Math.random();
+                    if (r > 0.5) {
+                        addItemToInventory("Geode", 1, quality);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 1, 0);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1, 0);
+                    }else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1, 0);
+                    }
                 }
             }
 
@@ -366,7 +400,7 @@
             function getBiomeVal(val) {
                 // Returns the corresponding values depending on what the users has chosen for the terrain type. This will return the gradient, minV, maxV and a color set up, this is the beginning of a hsl() value including the hue and saturation and the lightness will be created externally by the value set up by the mapGeneration function. This lets me set up a color variation in the terrain.
                 if (val == 0) {
-                    return [5, 40, 75, "hsl(20, 40%, "]
+                    return [5, 40, 75, "hsl(20, 40%, ", val]
                 }
             }
 
