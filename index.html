@@ -83,6 +83,16 @@
             let click = false;
             let keyCode;
 
+            // Add an array initializer to create the biome array needed to produce the values needed when rendering the terrain.
+            let biomeType = [];
+
+            // Set a value for the point-of-interests size when its displayed to the user.
+            const geodeSizeX = 20;
+            const geodeSizeY = 20;
+
+            // Create an array to hold the position location of each of the nodes or points of interest that are present within a map.
+            let geodeArray = [];
+
             // Let a variable be equal to 0 to hold the value of which one is selected.
             let selectedMenuOption = 0;
             let selectedOptionDifference = 0;
@@ -195,6 +205,7 @@
                 if (gameState == gameStates.RENDER_TERRAIN) {
                     // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built.
                     mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
+
                     gameState = 15
                 }
 
