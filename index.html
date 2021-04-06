@@ -382,6 +382,25 @@
                 }
             }
 
+            function checkItemAmount(array, item) {
+                // Returns either 0 or the number of items which are in the inventory. The array must be singular and also be in a structure of itemName, itemQuantity.
+                if (array.indexOf(item) != -1) {
+                    return array[array.indexOf(item)+1];
+                } else {
+                    return 0;
+                }
+            }
+
+            function removeItemFromInventory(item, quantity) {
+                if (checkItemAmount(usersInventory, item)-quantity > 0 && commonItems.indexOf(item) != -1) {
+                    array[array.indexOf(item)+1]-quantity
+                } else if (checkItemAmount(usersInventory, item)-quantity > 0 || commonItems.indexOf(item) == -1) {
+                    array.splice([array.indexOf(item)], 2);
+                } else {
+                    return false;
+                }
+            }
+
             function checkPos(x, y, arrayB, sizeX, sizeY) {
                 // arrayA is being checked against arrayB, forms of arrays are singular arrays with a structure of x,y,x,y ect. Array B is the points of the nodes and the array A is the mouse position, the sizes are the sizes to the tiles.
                 let i, j;
@@ -651,17 +670,17 @@
                 if (val == "Mountain") {
                     return [5, 35, 60, "hsl(115, 0%, ", val]
                 }
-                if (val == "Tiaga") {
-                    return [2, 30, 40, "hsl(143, 62%, ", val]
+                if (val == "Taiga") {
+                    return [5, 30, 40, "hsl(143, 62%, ", val]
                 }
                 if (val == "Jungle") {
-                    return [2, 25, 40, "hsl(95, 75%, ", val]
+                    return [5, 25, 40, "hsl(95, 75%, ", val]
                 }
                 if (val == "Red Desert") {
-                    return [2, 80, 90, "hsl(43, 84%, ", val]
+                    return [5, 30, 50, "hsl(18, 38%, ", val]
                 }
                 if (val == "Savannah") {
-                    return [2, 70, 80, "hsl(74, 49%, ", val]
+                    return [5, 30, 50, "hsl(62, 38%, ", val]
                 }
 
             }
