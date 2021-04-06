@@ -31,7 +31,6 @@
                 border: 1px dashed black;
                 padding: 10px;
                 height: 100%;
-                text-indent: 50px;
             }
 
             main {
@@ -49,7 +48,6 @@
         </header>
         <main>
             <section>
-                <span id="name"></span>
                 <span id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</span>
                 <br>
                 <canvas id="display">This element is unsupported.</canvas>
@@ -148,7 +146,7 @@
             };
 
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
-            let gameState
+            let gameState = 0
 
             //
             let temp_menu = []
@@ -164,11 +162,6 @@
             function init() {
                 // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
                 setInterval(main, 20);
-
-                gameState = 9;
-                
-                // setGameState(1);
-                // setInterval(draw, 20);
             }
 
             function MenuPrintout(array, selectedItem) {
@@ -189,7 +182,7 @@
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                textbox.innerHTML = textboxMessages[gameState]+gameState
+                textbox.innerHTML = textboxMessages[gameState]
 
                 if (keyCode > 0) {
                     if (keyCode == 87) {
@@ -216,22 +209,39 @@
                             usersSequence.push("D");
                         }
                     }
-                    if (keyCode == 27) {
+                    if (keyCode == 27 && gameState > gameStates.MAIN_MENU) {
                         menuReturn = true;
+                        chosenMenuOption = -1;
                     }
                     if (keyCode == 13 || keyCode == 32) {
-                        chosenMenuOption = selectedMenuOption;
+                        if (gameState < gameStates.MAIN_MENU) {
+                            chosenMenuOption = 0
+                        } else {
+                            chosenMenuOption = selectedMenuOption;
+                        }
                     }
                     keyCode = 0;
                 }
 
                 if (click) {
+                    if (gameState < gameStates.MAIN_MENU) {
+                            chosenMenuOption = 0
+                        } else {
+                            chosenMenuOption = selectedMenuOption;
+                        }
                     if (gameState == gameStates.BEGIN_GAME && usersAttempts > 0) {
                         usersPosArray.push(mouseX);
                         usersPosArray.push(mouseY);
                         usersAttempts -= 1
                     }
                     click = false;
+                }
+
+                if (gameState < gameStates.MAIN_MENU) {
+                    if (chosenMenuOption == 0) {
+                        gameState += 1;
+                        chosenMenuOption = -1;
+                    }
                 }
 
                 if (selectedOptionDifference != 0) {
@@ -366,7 +376,7 @@
                 
                 if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
                     // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
-                    
+
                     textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."
 
                     if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true) {
