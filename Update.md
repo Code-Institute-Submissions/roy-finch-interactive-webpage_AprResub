@@ -31,3 +31,4 @@ I have now made a function that checks that the location of the mouse is within 
 Also updated the menus and create a message that will be displayed on the inventory screen if the player has no items in their inventory. Also will create a unique message for the museum to display they have nothing to process.
 I have added the data sheets for this game. There are different biomes, rarities to items and now also the ability to find locations on the map that give you better items than if you select a part of the terrain which was not a point of interest.
 I ave ran into an issue with the sequence finalising...
+Added basic information to the help page so that I can create a CSS style which is similar to my main page.
