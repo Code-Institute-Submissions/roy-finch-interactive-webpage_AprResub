@@ -194,26 +194,26 @@
                 if (keyCode > 0) {
                     if (keyCode == 87) {
                         if (gameState == gameStates.REPEAT_SEQUENCE) {
-                            usersSequence.push("w");
+                            usersSequence.push("W");
                         } else {
                             selectedOptionDifference = -1;
                         }
                     }
                     if (keyCode == 83) {
                         if (gameState == gameStates.REPEAT_SEQUENCE) {
-                            usersSequence.push("s");
+                            usersSequence.push("S");
                         } else {
                             selectedOptionDifference = 1;
                         }
                     }
                     if (keyCode == 65) {
                         if (gameState == gameStates.REPEAT_SEQUENCE) {
-                            usersSequence.push("a");
+                            usersSequence.push("A");
                         }
                     }
                     if (keyCode == 68) {
                         if (gameState == gameStates.REPEAT_SEQUENCE) {
-                            usersSequence.push("d");
+                            usersSequence.push("D");
                         }
                     }
                     if (keyCode == 27) {
@@ -264,6 +264,7 @@
                         textbox.innerHTML = textbox.innerHTML+"<br><b>"+MenuOptions[2]+"</b>"
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
+                        chosenMenuOption = -1
                     }
                 }
 
@@ -272,6 +273,7 @@
                         textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> There is no items within the inventory to display."
+                        chosenMenuOption = -1
                     }
                 }
 
@@ -280,6 +282,7 @@
                         textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[3], selectedMenuOption)
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no gold or iron ore in your inventory to upgrade your tools or the pocket scanner."
+                        chosenMenuOption = -1
                     }
                 }
 
@@ -343,7 +346,7 @@
                 }
 
                 if (randomSequence.length == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
-                    randomSequence = sequenceGenerator(["w", "a", "s", "d"], 5)
+                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], 5)
                     sequenceDisplayTime = 100
                 }
                 
@@ -363,16 +366,19 @@
                 
                 if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
                     // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
-                    textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."+usersInventory
+                    
+                    textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."
+
                     if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true) {
-                        addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence))
+                        addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence));
                     } else {
-                        addRandomItem("nil",ArraySimilarity(usersSequence, randomSequence))
+                        addRandomItem("NA",ArraySimilarity(usersSequence, randomSequence));
                     }
-                    usersPosArray.shift()
-                    usersPosArray.shift()
+
+                    randomSequence = [];
                     usersSequence = [];
-                    randomSequence.length = [];
+                    usersPosArray.splice(0, 2);
+
                     if (usersPosArray.length <= 0) {
                         // Change the game state back to the main menu
                         mapArray = [];
@@ -425,7 +431,7 @@
 
             function addRandomItem(biome, quality) {
                 // This is a series of random items that will be added depending on the biome. Some biomes will have better items or different items and different randomness levels.
-                if (biome == "nil") {
+                if (biome == "NA") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Dirt", 1, 0);
@@ -436,8 +442,7 @@
                     } else if (r > 0.1) {
                         addItemToInventory("Sand", 1, 0);
                     }
-                }
-                if (biome == "Dirty Plain") {
+                } else if (biome == "Dirty Plain") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Geode", quality);
@@ -448,8 +453,7 @@
                     }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
                     }
-                }
-                if (biome == "Plains") {
+                } else if (biome == "Plains") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Geode", quality);
@@ -460,8 +464,7 @@
                     }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
                     }
-                }
-                if (itemC == "Desert") {
+                } else if (itemC == "Desert") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Fossil", quality);
@@ -472,8 +475,7 @@
                     }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
                     }
-                }
-                if (itemC == "Forest") {
+                } else if (itemC == "Forest") {
                     r = Math.random();
                     if (r > 0.6) {
                         addItemToInventory("Ruby", quality);
@@ -486,8 +488,7 @@
                     }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
                     }
-                }
-                if (itemC == "Swamp") {
+                } else if (itemC == "Swamp") {
                     r = Math.random();
                     if (r > 0.6) {
                         addItemToInventory("Amber", quality);
@@ -504,8 +505,7 @@
                     } else if (r > 0.0) {
                         addItemToInventory("Gold ore", 2);
                     }
-                }
-                if (itemC == "Mountain") {
+                } else if (itemC == "Mountain") {
                     r = Math.random();
                     if (r > 0.6) {
                         addItemToInventory("Emerald", quality);
@@ -524,8 +524,7 @@
                     } else if (r > 0.0) {
                         addItemToInventory("Gold ore", 2);
                     }
-                }
-                if (itemC == "Taiga") {
+                } else if (itemC == "Taiga") {
                     r = Math.random();
                     if (r > 0.6) {
                         addItemToInventory("Emerald", quality);
@@ -543,8 +542,7 @@
                     } else if (r > 0.0) {
                         addItemToInventory("Gold ore", 2);
                     }
-                }
-                if (itemC == "Jungle") {
+                } else if (itemC == "Jungle") {
                     r = Math.random();
                     if (r > 0.7) {
                         addItemToInventory("Geode", quality);
@@ -577,8 +575,7 @@
                         addItemToInventory("Diamond", quality);
                         addItemToInventory("Diamond", quality);
                     }
-                }
-                if (itemC == "Red Desert" || itemC == "Savannah") {
+                } else if (itemC == "Red Desert" || itemC == "Savannah") {
                     r = Math.random();
                     if (r > 0.6) {
                         addItemToInventory("Geode", quality);
@@ -654,32 +651,23 @@
                 // Returns the corresponding values depending on what the users has chosen for the terrain type. This will return the gradient, minV, maxV and a color set up, this is the beginning of a hsl() value including the hue and saturation and the lightness will be created externally by the value set up by the mapGeneration function. This lets me set up a color variation in the terrain.
                 if (val == "Dirty Plain") {
                     return [5, 40, 75, "hsl(20, 40%, ", val]
-                }
-                if (val == "Plains") {
+                } else if (val == "Plains") {
                     return [5, 40, 55, "hsl(124, 71%, ", val]
-                }
-                if (val == "Desert") {
+                } else if (val == "Desert") {
                     return [5, 60, 80, "hsl(59, 56%, ", val]
-                }
-                if (val == "Forest") {
+                } else if (val == "Forest") {
                     return [5, 15, 30, "hsl(115, 64%, ", val]
-                }
-                if (val == "Swamp") {
+                } else if (val == "Swamp") {
                     return [5, 25, 55, "hsl(115, 64%, ", val]
-                }
-                if (val == "Mountain") {
+                } else if (val == "Mountain") {
                     return [5, 35, 60, "hsl(115, 0%, ", val]
-                }
-                if (val == "Taiga") {
+                } else if (val == "Taiga") {
                     return [5, 30, 40, "hsl(143, 62%, ", val]
-                }
-                if (val == "Jungle") {
+                } else if (val == "Jungle") {
                     return [5, 25, 40, "hsl(95, 75%, ", val]
-                }
-                if (val == "Red Desert") {
+                } else if (val == "Red Desert") {
                     return [5, 30, 50, "hsl(18, 38%, ", val]
-                }
-                if (val == "Savannah") {
+                } else if (val == "Savannah") {
                     return [5, 30, 50, "hsl(62, 38%, ", val]
                 }
 
