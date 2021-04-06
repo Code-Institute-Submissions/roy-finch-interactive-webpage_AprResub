@@ -263,7 +263,11 @@
                 }
 
                 if (gameState == gameStates.INVENTORY_SCREEN) {
-                    textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory
+                    if (usersInventory.length > 0) {
+                        textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory
+                    } else {
+                        textbox.innerHTML = textbox.innerHTML+"<br> There is no items within the inventory to display."
+                    }
                 }
 
                 if (gameState == gameStates.UPGRADE_MENU) {
@@ -351,7 +355,11 @@
                 if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
                     // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
                     textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."+usersInventory
-                    addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence))
+                    if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true) {
+                        addRandomItem("Node",ArraySimilarity(usersSequence, randomSequence))
+                    } else {
+                        addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence))
+                    }
                     usersPosArray.shift()
                     usersPosArray.shift()
                     usersSequence = [];
@@ -365,8 +373,16 @@
                 }
             }
 
-            function checkLocations(arrayA, arrayB) {
-
+            function checkPos(x, y, arrayB, sizeX, sizeY) {
+                // arrayA is being checked against arrayB, forms of arrays are singular arrays with a structure of x,y,x,y ect. Array B is the points of the nodes and the array A is the mouse position, the sizes are the sizes to the tiles.
+                let i, j;
+                let intercept = [];
+                for (i = 0; i < arrayB.length; i = i+2) {
+                    if (x > arrayB[i]-(sizeX/2) && x < arrayB[i]+(sizeX/2) && y > arrayB[i+1]-(sizeX/2) && y < arrayB[i+1]+(sizeX/2)) {
+                        return true;
+                    }
+                }
+                return false;
             }
 
             function addItemToInventory(item, quantity) {
@@ -380,16 +396,25 @@
             }
 
             function addRandomItem(biome, quality) {
+                // This is a series of random items that will be added depending on the biome. Some biomes will have better items or different items and different randomness levels.
+                if (biome == "Node") {
+                    r = Math.random();
+                    if (r > 0.5) {
+                        addItemToInventory("Geode", quality);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    } 
+                }
                 if (biome == "Plains") {
                     r = Math.random();
                     if (r > 0.5) {
-                        addItemToInventory("Geode", 1, quality);
+                        addItemToInventory("Geode", quality);
                     } else if (r > 0.4) {
-                        addItemToInventory("Copper ore", 1, 0);
+                        addItemToInventory("Copper ore", 1);
                     } else if (r > 0.2) {
-                        addItemToInventory("Iron ore", 1, 0);
+                        addItemToInventory("Iron ore", 1);
                     }else if (r > 0.1) {
-                        addItemToInventory("Gold ore", 1, 0);
+                        addItemToInventory("Gold ore", 1);
                     }
                 }
             }
