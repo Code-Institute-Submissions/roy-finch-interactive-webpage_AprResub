@@ -8,11 +8,12 @@
         <style>
             body {
                 overflow-y: hidden;
+                overflow-x: hidden;
                 font-family: "Courier new", "Cambria";
                 text-align: center;
                 margin: 20px;
-                min-width: 700px;
-                min-height: 500px;
+                min-width: 500px;
+                min-height: 400px;
             }
 
             header {
@@ -117,6 +118,8 @@
             // the chosen menu option will take the value of the selected menu option when the user presses a button like enter or space or uses the mouse.
             let chosenMenuOption = -1;
 
+            let menuReturn = false;
+
             // This is a container with all of the possible gameStates that can be assigned to gameState, I use a numerical value for the state variable and have this function to give a name to what that numerical value stands for. I will then also organise these different numbers into groups depending on what they may include or do. Example, tutorial will have several messages that can be displayed to the screen.
             const gameStates = {
                 WELCOME: 0,
@@ -146,10 +149,13 @@
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
             let gameState
 
+            //
+            let temp_menu = []
+
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
             const textboxMessages = ["Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You"]
-            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp"], ["Process"]]
+            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp"], ["Process"], ["Pocket Scanner", "Pickaxe", "Shovel"]]
 
             // This is an array of all the common items within the game
             const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
@@ -182,8 +188,7 @@
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
-                textbox.innerHTML = textboxMessages[gameState]
-                textbox.innerHTML = gameState
+                textbox.innerHTML = textboxMessages[gameState]+gameState
 
                 if (keyCode > 0) {
                     if (keyCode == 87) {
@@ -210,10 +215,13 @@
                             usersSequence.push("d");
                         }
                     }
-                    if (keyCode == 13 || keyCode == 32) {
-                        chosenMenuOption = selectedMenuOption
+                    if (keyCode == 27) {
+                        menuReturn = true;
                     }
-                    keyCode = 0
+                    if (keyCode == 13 || keyCode == 32) {
+                        chosenMenuOption = selectedMenuOption;
+                    }
+                    keyCode = 0;
                 }
 
                 if (click) {
@@ -226,16 +234,46 @@
                 }
 
                 if (selectedOptionDifference != 0) {
-                    selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[0].length-1);
+                    if (gameState == gameStates.MAIN_MENU) {
+                        selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[0].length-1);
+                    }
+                    if (gameState == gameStates.BIOME_MENU) {
+                        selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[1].length-1);
+                    }
+                    if (gameState == gameStates.MUSEUM_MENU) {
+                        selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[2].length-1);
+                    }
+                    if (gameState == gameStates.UPGRADE_MENU) {
+                        selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[3].length-1);
+                    }
                     selectedOptionDifference = 0;
                 }
 
                 if (gameState == gameStates.MAIN_MENU) {
                     textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[0], selectedMenuOption);
                     if (chosenMenuOption != -1) {
-                        gameState = gameState+chosenMenuOption+1
-                        chosenMenuOption = -1
+                        gameState = gameState+chosenMenuOption+1;
+                        chosenMenuOption = -1;
+                        selectedMenuOption = 0
                     }
+                }
+
+                if (gameState == gameStates.MUSEUM_MENU) {
+                    textbox.innerHTML = textbox.innerHTML+"<br><b>"+MenuOptions[2]+"</b>"
+                }
+
+                if (gameState == gameStates.INVENTORY_SCREEN) {
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory
+                }
+
+                if (gameState == gameStates.UPGRADE_MENU) {
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[3], selectedMenuOption)
+                }
+
+                if (gameState >= gameStates.MAIN_MENU && gameState <= gameStates.UPGRADE_MENU && menuReturn) {
+                    menuReturn = false;
+                    gameState = gameStates.MAIN_MENU;
+                    selectedMenuOption = 0;
                 }
 
                 if (gameState == gameStates.BIOME_MENU) {
@@ -243,9 +281,9 @@
                     textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[1], selectedMenuOption);
                     if (chosenMenuOption != -1) {
                         gameState = gameStates.RENDER_TERRAIN; // GameState change to RENDER TERRAIN
-                        biomeType = getBiomeVal(chosenMenuOption);
-                        nodeDisplayTime = 100
-                        usersAttempts = 3
+                        biomeType = getBiomeVal(MenuOptions[1][chosenMenuOption]);
+                        nodeDisplayTime = 100;
+                        usersAttempts = 3;
                     }
                 }
 
@@ -296,12 +334,14 @@
                     sequenceDisplayTime = 100
                 }
                 
-                if (sequenceDisplayTime > 0) {
-                    // This is to show the sequence for a set amount of time.
-                    textbox.innerHTML = textbox.innerHTML+"<br>"+randomSequence
-                    sequenceDisplayTime -= 1
-                } else if (sequenceDisplayTime == 0) {
-                    gameState = gameStates.REPEAT_SEQUENCE
+                if (gameState == gameStates.BEGIN_SEQUENCE) {
+                    if (sequenceDisplayTime > 0) {
+                        // This is to show the sequence for a set amount of time.
+                        textbox.innerHTML = textbox.innerHTML+"<br>"+randomSequence
+                        sequenceDisplayTime -= 1
+                    } else if (sequenceDisplayTime == 0) {
+                        gameState = gameStates.REPEAT_SEQUENCE
+                    }
                 }
 
                 if (usersSequence.length > 0) {
@@ -325,6 +365,10 @@
                 }
             }
 
+            function checkLocations(arrayA, arrayB) {
+
+            }
+
             function addItemToInventory(item, quantity) {
                 // This will add an item to the inventory which is either rare and obtained from a node, or will add an item thats not in the inventory. If the item is common then it will just add the quantity to the entry within the inventory.
                 if (commonItems.indexOf(item) == -1 || usersInventory.indexOf(item) == -1) {
@@ -336,7 +380,7 @@
             }
 
             function addRandomItem(biome, quality) {
-                if (biome == 0) {
+                if (biome == "Plains") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Geode", 1, quality);
@@ -399,7 +443,7 @@
 
             function getBiomeVal(val) {
                 // Returns the corresponding values depending on what the users has chosen for the terrain type. This will return the gradient, minV, maxV and a color set up, this is the beginning of a hsl() value including the hue and saturation and the lightness will be created externally by the value set up by the mapGeneration function. This lets me set up a color variation in the terrain.
-                if (val == 0) {
+                if (val == "Plains") {
                     return [5, 40, 75, "hsl(20, 40%, ", val]
                 }
             }
