@@ -77,6 +77,10 @@
             // This is an initialization of the mapArray so that it can hold the numerical values in the array format.
             let mapArray = [];
 
+            // Create an array to hold the sequence and another to hold the users inputted characters.
+            let randomSequence = [];
+            let usersSequence = [];
+
             // These are the variables that will be used during outputs from the EventHandlers and will allow for me to get a public mouse location and a keyCode of the current buttom pressed.
             let mouseX = 0;
             let mouseY = 0;
@@ -97,8 +101,9 @@
             let usersPosArray = [];
             let usersAttempts = 0;
 
-            // A time variable to count up or down the length of the time that the points of interests that are displayed.
+            // A time variable to count up or down the length of the time that the points of interests that are displayed. Another variable that will time the display of the random sequence.
             let nodeDisplayTime;
+            let sequenceDisplayTime;
 
             // Let a variable be equal to 0 to hold the value of which one is selected.
             let selectedMenuOption = 0;
@@ -128,7 +133,8 @@
                 RENDER_NODES: 15,
                 BEGIN_GAME: 16,
                 DISPLAY_DIGGOUTS: 17,
-                BEGIN_SEQUENCE: 18
+                BEGIN_SEQUENCE: 18,
+                REPEAT_SEQUENCE: 19
             };
 
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
@@ -251,6 +257,30 @@
                         gameState = gameStates.BEGIN_SEQUENCE;
                     }
                 }
+
+                if (randomSequence.length == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
+                    randomSequence = sequenceGenerator(["w", "a", "s", "d"], 5)
+                    sequenceDisplayTime = 100
+                } else if (sequenceDisplayTime > 0) {
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+randomSequence
+                    sequenceDisplayTime -= 1
+                } else if (sequenceDisplayTime == 0) {
+                    gameState = 19
+                } else if (usersSequence.length == randomSequence.length) {
+                    // add a function to test if both variables are the same.
+                }
+            }
+
+            function sequenceGenerator(array, len) {
+                // This will take an array of characters that will be used to create a random array with a definable length. This function will be used for two of my mini-games but will use two different sets of characters for the both mini-games.
+                let i, r;
+                let temp_array = [];
+                for (i = 0; i < len; i++) {
+                    r = Math.random();
+                    // Create a variable to hold a random int, use that int to then chose a random number from an array, using the arrays length * by random then rounded to the nearest whole number, then -1 to give an actual position in the array. Add that character to a temp array and once anotehr characters are added to the array, return the array.
+                    temp_array.push(array[Math.round(r*(array.length-1))]);
+                }
+                return temp_array;
             }
 
             function nodeGenerator(num) {
