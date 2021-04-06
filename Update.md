@@ -27,3 +27,7 @@ Now that the function can create random locations and display them on the canvas
 I have noticed an issue with the draw function where the nodes are in the color of the terrain and this needs to be changed to a color with a higher visibility. I am trying to set the color to a hsl(0, 0%, 0%) which is a black negative color.
 I want to after the user has placed there dig attempts I then want to display them on the map. Whilst they are displayed I want the user to try and complete a sequence to do a successful dig. I will now create the funtion to create random requences.
 I have successfully added a sequence randomised function and also an array similarity tester which will return a percentage of how similar those two arrays where. Now I will begin to make it remove and add items to the inventory depending on how well they complete this sequence recall.
+I have now made a function that checks that the location of the mouse is within an array, and gives the user an item depending on whether that item is on a point of interest.
+Also updated the menus and create a message that will be displayed on the inventory screen if the player has no items in their inventory. Also will create a unique message for the museum to display they have nothing to process.
+I have added the data sheets for this game. There are different biomes, rarities to items and now also the ability to find locations on the map that give you better items than if you select a part of the terrain which was not a point of interest.
+I ave ran into an issue with the sequence finalising...

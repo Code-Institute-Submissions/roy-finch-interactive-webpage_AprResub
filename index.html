@@ -155,7 +155,7 @@
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
             const textboxMessages = ["Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You", "Hello", "Who", "Are", "You"]
-            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Plains", "Desert", "Forest", "Swamp"], ["Process"], ["Pocket Scanner", "Pickaxe", "Shovel"]]
+            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner", "Pickaxe", "Shovel"]]
 
             // This is an array of all the common items within the game
             const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
@@ -259,7 +259,11 @@
                 }
 
                 if (gameState == gameStates.MUSEUM_MENU) {
-                    textbox.innerHTML = textbox.innerHTML+"<br><b>"+MenuOptions[2]+"</b>"
+                    if (usersInventory.length > 0) {
+                        textbox.innerHTML = textbox.innerHTML+"<br><b>"+MenuOptions[2]+"</b>"
+                    } else {
+                        textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
+                    }
                 }
 
                 if (gameState == gameStates.INVENTORY_SCREEN) {
@@ -271,7 +275,11 @@
                 }
 
                 if (gameState == gameStates.UPGRADE_MENU) {
-                    textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[3], selectedMenuOption)
+                    if (usersInventory.length > 0) {
+                        textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[3], selectedMenuOption)
+                    } else {
+                        textbox.innerHTML = textbox.innerHTML+"<br> You have no gold or iron ore in your inventory to upgrade your tools or the pocket scanner."
+                    }
                 }
 
                 if (gameState >= gameStates.MAIN_MENU && gameState <= gameStates.UPGRADE_MENU && menuReturn) {
@@ -356,9 +364,9 @@
                     // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
                     textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."+usersInventory
                     if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true) {
-                        addRandomItem("Node",ArraySimilarity(usersSequence, randomSequence))
-                    } else {
                         addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence))
+                    } else {
+                        addRandomItem("nil",ArraySimilarity(usersSequence, randomSequence))
                     }
                     usersPosArray.shift()
                     usersPosArray.shift()
@@ -397,13 +405,29 @@
 
             function addRandomItem(biome, quality) {
                 // This is a series of random items that will be added depending on the biome. Some biomes will have better items or different items and different randomness levels.
-                if (biome == "Node") {
+                if (biome == "nil") {
+                    r = Math.random();
+                    if (r > 0.5) {
+                        addItemToInventory("Dirt", 1, 0);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 1, 0);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Stone", 1, 0);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Sand", 1, 0);
+                    }
+                }
+                if (biome == "Dirty Plain") {
                     r = Math.random();
                     if (r > 0.5) {
                         addItemToInventory("Geode", quality);
-                    } else if (r > 0.1) {
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 1);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
-                    } 
+                    }
                 }
                 if (biome == "Plains") {
                     r = Math.random();
@@ -415,6 +439,146 @@
                         addItemToInventory("Iron ore", 1);
                     }else if (r > 0.1) {
                         addItemToInventory("Gold ore", 1);
+                    }
+                }
+                if (itemC == "Desert") {
+                    r = Math.random();
+                    if (r > 0.5) {
+                        addItemToInventory("Fossil", quality);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 1);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    }else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    }
+                }
+                if (itemC == "Forest") {
+                    r = Math.random();
+                    if (r > 0.6) {
+                        addItemToInventory("Ruby", quality);
+                    } else if (r > 0.5) {
+                        addItemToInventory("Lapis Lazuli", 1);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 1);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    }else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    }
+                }
+                if (itemC == "Swamp") {
+                    r = Math.random();
+                    if (r > 0.6) {
+                        addItemToInventory("Amber", quality);
+                    } else if (r > 0.5) {
+                        addItemToInventory("Lapis Lazuli", 2);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 2);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    }  else if (r > 0.03) {
+                        addItemToInventory("Iron ore", 2);
+                    } else if (r > 0.0) {
+                        addItemToInventory("Gold ore", 2);
+                    }
+                }
+                if (itemC == "Mountain") {
+                    r = Math.random();
+                    if (r > 0.6) {
+                        addItemToInventory("Emerald", quality);
+                    } else if (r > 0.5) {
+                        addItemToInventory("Sapphire", quality);
+                        addItemToInventory("Sapphire", quality);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Geode", quality);
+                        addItemToInventory("Geode", quality);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    }  else if (r > 0.05) {
+                        addItemToInventory("Iron ore", 2);
+                    } else if (r > 0.0) {
+                        addItemToInventory("Gold ore", 2);
+                    }
+                }
+                if (itemC == "Taiga") {
+                    r = Math.random();
+                    if (r > 0.6) {
+                        addItemToInventory("Emerald", quality);
+                    } else if (r > 0.5) {
+                        addItemToInventory("Sapphire", quality);
+                        addItemToInventory("Sapphire", quality);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Copper ore", 2);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 1);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Gold ore", 1);
+                    }  else if (r > 0.05) {
+                        addItemToInventory("Iron ore", 2);
+                    } else if (r > 0.0) {
+                        addItemToInventory("Gold ore", 2);
+                    }
+                }
+                if (itemC == "Jungle") {
+                    r = Math.random();
+                    if (r > 0.7) {
+                        addItemToInventory("Geode", quality);
+                        addItemToInventory("Geode", quality);
+                    } else if (r > 0.6) {
+                        addItemToInventory("Sapphire", quality);
+                    } else if (r > 0.5) {
+                        addItemToInventory("Emerald", quality);
+                    } else if (r > 0.4) {
+                        addItemToInventory("Ruby", quality);
+                    } else if (r > 0.3) {
+                        addItemToInventory("Iron ore", 1);
+                    }  else if (r > 0.25) {
+                        addItemToInventory("Gold ore", 2);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 2);
+                    } else if (r > 0.19) {
+                        addItemToInventory("Iron ore", 3);
+                    } else if (r > 0.185) {
+                        addItemToInventory("Gold ore", 3);
+                    } else if (r > 0.15) {
+                        addItemToInventory("Fossil", quality);
+                        addItemToInventory("Fossil", quality);
+                    } else if (r > 0.2) {
+                        addItemToInventory("Iron ore", 2);
+                    } else if (r > 0.04) {
+                        addItemToInventory("Amber", quality);
+                        addItemToInventory("Amber", quality);
+                    } else if (r > 0.0) {
+                        addItemToInventory("Diamond", quality);
+                        addItemToInventory("Diamond", quality);
+                    }
+                }
+                if (itemC == "Red Desert" || itemC == "Savannah") {
+                    r = Math.random();
+                    if (r > 0.6) {
+                        addItemToInventory("Geode", quality);
+                        addItemToInventory("Geode", quality);
+                    } else if (r > 0.1) {
+                        addItemToInventory("Fossil", quality);
+                        addItemToInventory("Fossil", quality);
+                    } else if (r > 0.08) {
+                        addItemToInventory("Iron ore", 2, 0);
+                    } else if (r > 0.06) {
+                        addItemToInventory("Gold ore", 2, 0);
+                    } else if (r > 0.04) {
+                        addItemToInventory("Diamond", quality);
+                        addItemToInventory("Diamond", quality);
+                    }  else if (r > 0.02) {
+                        addItemToInventory("Emerald", quality);
+                        addItemToInventory("Emerald", quality);
+                    } else if (r > 0.0) {
+                        addItemToInventory("Topaz", quality);
+                        addItemToInventory("Topaz", quality);
                     }
                 }
             }
@@ -468,9 +632,37 @@
 
             function getBiomeVal(val) {
                 // Returns the corresponding values depending on what the users has chosen for the terrain type. This will return the gradient, minV, maxV and a color set up, this is the beginning of a hsl() value including the hue and saturation and the lightness will be created externally by the value set up by the mapGeneration function. This lets me set up a color variation in the terrain.
-                if (val == "Plains") {
+                if (val == "Dirty Plain") {
                     return [5, 40, 75, "hsl(20, 40%, ", val]
                 }
+                if (val == "Plains") {
+                    return [5, 40, 55, "hsl(124, 71%, ", val]
+                }
+                if (val == "Desert") {
+                    return [5, 60, 80, "hsl(59, 56%, ", val]
+                }
+                if (val == "Forest") {
+                    return [5, 15, 30, "hsl(115, 64%, ", val]
+                }
+                if (val == "Swamp") {
+                    return [5, 25, 55, "hsl(115, 64%, ", val]
+                }
+                if (val == "Mountain") {
+                    return [5, 35, 60, "hsl(115, 0%, ", val]
+                }
+                if (val == "Tiaga") {
+                    return [2, 30, 40, "hsl(143, 62%, ", val]
+                }
+                if (val == "Jungle") {
+                    return [2, 25, 40, "hsl(95, 75%, ", val]
+                }
+                if (val == "Red Desert") {
+                    return [2, 80, 90, "hsl(43, 84%, ", val]
+                }
+                if (val == "Savannah") {
+                    return [2, 70, 80, "hsl(74, 49%, ", val]
+                }
+
             }
 
             function MouseMove(e) {
