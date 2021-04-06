@@ -186,7 +186,6 @@
                         usersPosArray.push(mouseY);
                         usersAttempts -= 1
                     }
-                    
                     click = false;
                 }
 
@@ -227,10 +226,12 @@
                     gameState = 16 // GameState is equal to begin game.
                 }
 
+                if (gameState == gameStates.BEGIN_GAME && usersAttempts == 0) {
+                    gameState = 17;
+                }
+
                 if (usersAttempts > 0) {
                     textbox.innerHTML = textbox.innerHTML+"<br>You have got "+usersAttempts+" attempts remaining.";
-                } else (gameState == gameStates.DISPLAY_DIGGOUTS) {
-                    // Create a function that will display the locations the user has selected.
                 }
 
                 if (mapArray != []) {
@@ -241,6 +242,14 @@
                 if (gameState == gameStates.RENDER_NODES) {
                     // This will render the nodes until the gamemode is changed.
                     nodeRender(nodePosArray);
+                }
+
+                if (gameState == gameStates.DISPLAY_DIGGOUTS || gameState == gameStates.BEGIN_SEQUENCE) {
+                    // Create a function that will display the locations the user has selected.
+                    nodeRender(usersPosArray);
+                    if (gameState == gameStates.DISPLAY_DIGGOUTS) {
+                        gameState = gameStates.BEGIN_SEQUENCE;
+                    }
                 }
             }
 
