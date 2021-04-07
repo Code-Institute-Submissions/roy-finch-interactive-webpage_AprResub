@@ -202,7 +202,7 @@
                 if (keyCode > 0) {
                     if (keyCode == 87) {
                         // Check if the keycode is W, if the gameState is repeat sequence then add W to the users sequence. If not and the user is in a menu, change the option difference. Meaning that I can apply a negative difference to the currently selected option to move the selected option to a different location.
-                        if (gameState == gameStates.REPEAT_SEQUENCE) {
+                        if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
                             usersSequence.push("W");
                         } else {
                             selectedOptionDifference = -1;
@@ -210,7 +210,7 @@
                     }
                     if (keyCode == 83) {
                         // Check if the keycode is S, if the gameState is repeat sequence then add S to the users sequence. If not and the user is in a menu, change the option difference. Meaning that I can apply a positive difference to the currently selected option to move the selected option to a different location.
-                        if (gameState == gameStates.REPEAT_SEQUENCE) {
+                        if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
                             usersSequence.push("S");
                         } else {
                             selectedOptionDifference = 1;
@@ -218,13 +218,13 @@
                     }
                     if (keyCode == 65) {
                         // This checks if the keycode is A, and adds it to the sequence array if the gamestate is repeat sequence.
-                        if (gameState == gameStates.REPEAT_SEQUENCE) {
+                        if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
                             usersSequence.push("A");
                         }
                     }
                     if (keyCode == 68) {
                         // This checks if the keycode is D, and adds it to the sequence array if the gamestate is repeat sequence.
-                        if (gameState == gameStates.REPEAT_SEQUENCE) {
+                        if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
                             usersSequence.push("D");
                         }
                     }
@@ -465,10 +465,17 @@
 
                     textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."
 
-                    if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true) {
+                    if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true && usersPosArray.length > 0) {
                         addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence));
                     } else {
                         addRandomItem("NA",ArraySimilarity(usersSequence, randomSequence));
+                    }
+
+                    if (gameState == gameStates.M_REPEAT_SEQUENCE) {
+                        currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
+                        museumInventory.push(currentProcessItem[0])
+                        museumInventory.push(currentProcessItem[1])
+                        gameState = gameStates.MUSEUM_MENU;
                     }
 
                     randomSequence = [];
