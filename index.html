@@ -116,7 +116,7 @@
             let sequenceDisplayTime;
 
             // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
-            let usersInventory = ["Gold ore", 10, "Iron ore", 20, "Geode", 80, "Geode", 100];
+            let usersInventory = [];
 
             // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
             let usersToolbelt = [1, 1, 1, 1];
@@ -191,6 +191,16 @@
                     }
                 }
                 return temp_string
+            }
+
+            function partialArrayOutput(array, num) {
+                // Takes an array and how much of the array you would like to present using a numerical index value
+                let i;
+                let temp_array = []
+                for (i = 0; i < range(num, 2, array.length); i++) {
+                    temp_array.push(array[i])
+                }
+                return temp_array;
             }
 
             function main() {
@@ -379,7 +389,7 @@
 
                 if (gameState == gameStates.BIOME_MENU) {
                     // This will check if the gameState is the biome menu and will display the options on the terrain. It will then print out the menu, and then check if the player has selected or chosen an option and change the game state to RENDER TERRAIN, once changed will obtain data on the terrain that has been chosen.
-                    textbox.innerHTML = textbox.innerHTML+MenuPrintout(MenuOptions[1], selectedMenuOption);
+                    textbox.innerHTML = textbox.innerHTML+MenuPrintout(partialArrayOutput(MenuOptions[1], usersToolbelt[0]), selectedMenuOption);
                     if (chosenMenuOption != -1) {
                         gameState = gameStates.RENDER_TERRAIN; // GameState change to RENDER TERRAIN
                         biomeType = getBiomeVal(MenuOptions[1][chosenMenuOption]);
