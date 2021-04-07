@@ -326,13 +326,13 @@
                             chosenMenuOption = -1
                         } else if (chosenMenuOption == 1) {
                             textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory;
+                            if (menuReturn) {
+                                gameState = gameStates.MAIN_MENU
+                            }
                         }
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
                         chosenMenuOption = -1;
-                        if (menuReturn) {
-                            gameState = gameStates.MAIN_MENU
-                        }
                     }
                 }
 
@@ -562,7 +562,7 @@
                             usersInventory.splice(i, 2);
                         }
                     }
-                } else if (usersInventory.includes(item) && commonItems.includes(item)) {
+                } else if (usersInventory.includes(item) && commonItems.indexOf(item) == -1) {
                     for (i = 0; i < usersInventory.length; i = i+2) {
                         if (usersInventory[i] == item && usersInventory[i+1] == quantity && temp_boolean == false) {
                             usersInventory.splice(i, 2);
