@@ -388,7 +388,7 @@
                     }
                 }
 
-                if (gameState >= gameStates.MAIN_MENU && gameState <= gameStates.UPGRADE_MENU && menuReturn) {
+                if ((gameState >= gameStates.MAIN_MENU && gameState <= gameStates.UPGRADE_MENU) && menuReturn) {
                     // This will make the escape button return to the main menu when the user is in a different menu then the main one.
                     menuReturn = false;
                     gameState = gameStates.MAIN_MENU;
@@ -449,12 +449,12 @@
                     gameState = gameStates.BEGIN_SEQUENCE;
                 }
 
-                if (randomSequence.length <= 0 && gameState == gameStates.BEGIN_SEQUENCE) {
+                if (randomSequence.length < sequenceLength && gameState == gameStates.BEGIN_SEQUENCE) {
                     randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
                     sequenceDisplayTime = 100;
                 }
 
-                if (randomSequence.length <= 0 && gameState == gameStates.M_BEGIN_SEQUENCE) {
+                if (randomSequence.length < sequenceLength && gameState == gameStates.M_BEGIN_SEQUENCE) {
                     randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
                     sequenceDisplayTime = 100;
                 }
@@ -492,7 +492,7 @@
                     if (gameState == gameStates.M_REPEAT_SEQUENCE) {
                         currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
                         museumInventory.push(currentProcessItem[0]+" - Quality: "+currentProcessItem[1]);
-                        gameState = gameStates.MUSEUM_MENU; // #LEFTOFF#
+                        gameState = gameStates.MUSEUM_MENU;
                     }
 
                     randomSequence = [];
@@ -554,7 +554,7 @@
 
             function removeItemFromInventory(item, quantity) {
                 let temp_boolean = false;
-                if (usersInventory.includes(item) && commonItems.indexOf(item) > -1) {
+                if (usersInventory.includes(item) && commonItems.includes(item)) {
                     for (i = 0; i < usersInventory.length; i = i+2) {
                         if (usersInventory[i] == item && usersInventory[i+1] > quantity) {
                             usersInventory[i+1] = usersInventory[i+1]-quantity;
