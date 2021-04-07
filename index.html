@@ -15,6 +15,7 @@
                 min-width: 500px;
                 min-height: 400px;
                 user-select: none;
+                font-size: 16px;
             }
 
             header {
@@ -23,7 +24,7 @@
 
             canvas {
                 width: 60vw;
-                height: 40vw;
+                height: 40vh;
                 position: absolute;
                 bottom: 20vh;
                 left: 20vw;
@@ -55,7 +56,10 @@
                 <canvas id="display">This element is unsupported.</canvas>
             </section>
         </main>
-
+        <footer>
+            <span>Are you having trouble with this game? I have made a quick peice of information to assit you on your digging. <a target="_blank" href="help.html">Click here.</a></span>
+        </footer>
+        
         <script>
             // These two variables are the canvas located in the HTML and also the canvases rectangular hitbox
             // I will also declare the textbox as a constant variable so I can alter its inner HTML easier.
@@ -272,7 +276,7 @@
 
                 if (gameState < gameStates.MAIN_MENU) {
                     //  This will add a message to the texbox to tell the user how to continue the tutorial. Will also tell the user what they can do to progress the textbox.
-                    textbox.innerHTML = textbox.innerHTML+"<br>You can use the mouse, spacebar or the enter button to continue."
+                    textbox.innerHTML = textbox.innerHTML+"<br><br>You can use the mouse, spacebar or the enter button to continue."
                     if (chosenMenuOption == 0) {
                         gameState += 1;
                         chosenMenuOption = -1;
@@ -333,7 +337,6 @@
                         currentProcessItem = []
                         currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
                         currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
-                        textbox.innerHTML = textbox.innerHTML+" "+currentProcessItem
                         removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
                         chosenMenuOption = -1
                         sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
