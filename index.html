@@ -44,7 +44,7 @@
             }
         </style>
     </head>
-    <body onload="init();" onmousemove="MouseMove(event);" onkeydown="KeyDown(event)" onkeyup="KeyUp()" onmousedown="MouseDown()" onmouseup="MouseUp()">
+    <body onload="init();" onkeydown="KeyDown(event)" onmousedown="MouseDown()" onmousemove="MouseMove(event);">
         <header>
             <h1>Dig UP!</h1>
             <span>Archeology-base memory game.</span>
@@ -63,16 +63,16 @@
         <script>
             // These two variables are the canvas located in the HTML and also the canvases rectangular hitbox
             // I will also declare the textbox as a constant variable so I can alter its inner HTML easier.
-            const canvas = document.getElementById("display")
-            const rect = canvas.getBoundingClientRect()
+            let canvas = document.getElementById("display")
+            let rect = canvas.getBoundingClientRect()
             const textbox = document.getElementById("textbox")
 
             // I will create a variable called ctx which is "context" which will hold the drawn out products that are printed to the canvas. This will be needed for the draw and clear function.
-            const ctx = canvas.getContext("2d");
+            let ctx = canvas.getContext("2d");
 
             // Using the canvas and its hitbox I then create a scale factor of how big the actual canvas is currently being displayed at. This allows for me to change the actual size of the canvas and any following numerical data to make sure that I am using the correct data from the website that the user is using.
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
+            let scaleX = canvas.width / rect.width;
+            let scaleY = canvas.height / rect.height;
 
             // This is just a constant value of the size of each tile that will be printed to the screen, I have also locked the total amount of tiles that will be printed using the size constants that are set to 20 whilst I am in the early development.
             const tileSizeX = 5;
@@ -120,7 +120,7 @@
             let sequenceDisplayTime;
 
             // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
-            let usersInventory = [];
+            let usersInventory = ["Geode", 100];
 
             // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
             let usersToolbelt = [1, 1, 1, 1];
@@ -172,7 +172,7 @@
 
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
-            const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "Can you repeat that sequence?", "Which item would you like to process using the processor?"]
+            const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory. You can see what is in your inventory and then either use a confirm button or escape to come back to the main menu.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "Can you repeat that sequence?", "Which item would you like to process using the processor?"]
             const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level ", "Processer || Level "]]
 
             // This is an array of all the common items within the game
@@ -267,9 +267,11 @@
                         }
                     if (gameState == gameStates.BEGIN_GAME && usersAttempts > 0) {
                         // This will add the users Mouse Position to the users pos array and use one attempt, this is how I begin to track and locate the mouse and where it has been clicked whilst playing the game.
-                        usersPosArray.push(mouseX);
-                        usersPosArray.push(mouseY);
-                        usersAttempts -= 1
+                        if (mouseX > 0 && mouseX < rect.width * scaleX && mouseY > 0 && mouseY < rect.height * scaleY) {
+                            usersPosArray.push(mouseX);
+                            usersPosArray.push(mouseY);
+                            usersAttempts -= 1
+                        }
                     }
                     click = false;
                 }
@@ -310,7 +312,7 @@
                         // Check if the user has used one of the continue buttons. Then register that action and do the corresponding actions to the script depending on the current gameState. This will just redirect the player to one of his chosen options from the main menu.
                         gameState = gameState+chosenMenuOption+1;
                         chosenMenuOption = -1;
-                        selectedMenuOption = 0
+                        selectedMenuOption = 0;
                     }
                 }
 
@@ -320,7 +322,7 @@
                         if (chosenMenuOption == -1) {
                             textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption);
                         } else if (chosenMenuOption == 0) {
-                            gameState = gameStates.PROCESS_ITEMS
+                            gameState = gameStates.PROCESS_ITEMS;
                             chosenMenuOption = -1
                         } else if (chosenMenuOption == 1) {
                             textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory;
@@ -328,17 +330,20 @@
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
                         chosenMenuOption = -1;
+                        if (menuReturn) {
+                            gameState = gameStates.MAIN_MENU
+                        }
                     }
                 }
 
                 if (gameState == gameStates.PROCESS_ITEMS) {
                     textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
-                    if (chosenMenuOption > -1) {
+                    if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0) {
                         currentProcessItem = []
                         currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
                         currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
                         removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
-                        chosenMenuOption = -1
+                        chosenMenuOption = -1;
                         sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
                         gameState = gameStates.M_BEGIN_SEQUENCE;
                     }
@@ -548,17 +553,24 @@
             }
 
             function removeItemFromInventory(item, quantity) {
-                if (usersInventory.includes(item)) {
+                let temp_boolean = false;
+                if (usersInventory.includes(item) && commonItems.indexOf(item) > -1) {
                     for (i = 0; i < usersInventory.length; i = i+2) {
                         if (usersInventory[i] == item && usersInventory[i+1] > quantity) {
                             usersInventory[i+1] = usersInventory[i+1]-quantity;
-                            return true;
                         } else if (usersInventory[i] == item && usersInventory[i+1] == quantity) {
                             usersInventory.splice(i, 2);
-                            return true;
                         }
                     }
-                return false;
+                } else if (usersInventory.includes(item) && commonItems.includes(item)) {
+                    for (i = 0; i < usersInventory.length; i = i+2) {
+                        if (usersInventory[i] == item && usersInventory[i+1] == quantity && temp_boolean == false) {
+                            usersInventory.splice(i, 2);
+                            temp_boolean = true;
+                        }
+                    }
+                } else {
+                    return false
                 }
             }
 
@@ -830,8 +842,19 @@
 
             function MouseMove(e) {
                 // This function will cast out the users position relative to the canvas. This is done by taking the users X or Y and then finding the location of the canvas and the rectangular hitbox. This is then rounded afterwards.
-                mouseX = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
-                mouseY = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
+                canvas = document.getElementById("display");
+                rect = canvas.getBoundingClientRect();
+                ctx = canvas.getContext("2d");
+
+                scaleX = canvas.width / rect.width;
+                scaleY = canvas.height / rect.height;
+
+                if ((e.clientX - rect.left) * scaleX > 0 && (e.clientX - rect.left) * scaleX < rect.width * scaleX) {
+                    mouseX = Math.round(range((e.clientX - rect.left) * scaleX, 0, rect.width * scaleX));
+                }
+                if ((e.clientY - rect.top) * scaleY > 0 && (e.clientY - rect.top) * scaleY < rect.width * scaleY) {
+                    mouseY = Math.round(range((e.clientY - rect.top) * scaleY, 0, rect.height * scaleY));
+                }
             }
 
             function KeyDown(e) {
