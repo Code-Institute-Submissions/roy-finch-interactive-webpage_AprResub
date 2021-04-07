@@ -22,9 +22,11 @@
             }
 
             canvas {
-                border: 1px solid black;
                 width: 60vw;
                 height: 40vw;
+                position: absolute;
+                bottom: 20vh;
+                left: 20vw;
             }
 
             section {
@@ -100,6 +102,7 @@
 
             // Create a variable to hold a number of how long a sequence is.
             let sequenceLength;
+            let processSeqLength;
 
             // Create an array to hold the position location of each of the nodes or points of interest that are present within a map.
             let nodePosArray = [];
@@ -116,7 +119,7 @@
             let usersInventory = ["Gold ore", 10, "Iron ore", 20, "Geode", 80, "Geode", 100];
 
             // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
-            let usersToolbelt = [1, 1, 1];
+            let usersToolbelt = [1, 1, 1, 1];
 
             // Let a variable be equal to 0 to hold the value of which one is selected.
             let selectedMenuOption = 0;
@@ -124,6 +127,9 @@
 
             // The chosen menu option will take the value of the selected menu option when the user presses a button like enter or space or uses the mouse.
             let chosenMenuOption = -1;
+
+            // This will hold the values of the item and quality of an item before processing
+            let currentProcessItem = [];
 
             // A boolean to tell the script to return to the Main menu when possible.
             let menuReturn = false;
@@ -162,8 +168,8 @@
 
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
-            const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?"]
-            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level "]]
+            const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "Can you repeat that sequence?", "Which item would you like to process using the processor?"]
+            const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level ", "Processer || Level "]]
 
             // This is an array of all the common items within the game
             const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
@@ -277,6 +283,9 @@
                     if (gameState == gameStates.UPGRADE_MENU) {
                         selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[3].length-1);
                     }
+                    if (gameState == gameStates.PROCESS_ITEMS) {
+                        selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, mergeTwoItems(filterArray(usersInventory, commonItems)).length-1);
+                    }
                     selectedOptionDifference = 0;
                 }
 
@@ -295,26 +304,38 @@
                     if (usersInventory.length > 0) {
                         // This is the museum menu which will display if the inventory has any contents.
                         if (chosenMenuOption == -1) {
-                            textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption)
+                            textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption);
                         } else if (chosenMenuOption == 0) {
                             gameState = gameStates.PROCESS_ITEMS
                             chosenMenuOption = -1
                         } else if (chosenMenuOption == 1) {
-                            textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory
+                            textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory;
                         }
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
-                        chosenMenuOption = -1
+                        chosenMenuOption = -1;
+                    }
+                }
+
+                if (gameState == gameStates.PROCESS_ITEMS) {
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
+                    if (chosenMenuOption > -1) {
+                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption]);
+                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption+1]);
+                        textbox.innerHTML = textbox.innerHTML+currentProcessItem
+                        removeItemFromInventory(filterArray(usersInventory, commonItems)[chosenMenuOption], filterArray(usersInventory, commonItems)[chosenMenuOption+1]);
+                        sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
+                        // gameState = gameStates.M_BEGIN_SEQUENCE;
                     }
                 }
 
                 if (gameState == gameStates.INVENTORY_SCREEN) {
                     if (usersInventory.length > 0) {
                         // This is the inventory screen which will only display the contents of the inventory if they have any items in the inventory.
-                        textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory
+                        textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory;
                     } else {
-                        textbox.innerHTML = textbox.innerHTML+"<br> There is no items within the inventory to display."
-                        chosenMenuOption = -1
+                        textbox.innerHTML = textbox.innerHTML+"<br> There is no items within the inventory to display.";
+                        chosenMenuOption = -1;
                     }
                 }
 
@@ -324,22 +345,26 @@
                         textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout((mergeTwoArray(MenuOptions[3], usersToolbelt)), selectedMenuOption)
                         if (chosenMenuOption == 0 && checkItemAmount(usersInventory, "Gold ore") >= usersToolbelt[0]) {
                             removeItemFromInventory("Gold ore", usersToolbelt[0])
-                            usersToolbelt[0] += 1
+                            usersToolbelt[0] += 1;
                             chosenMenuOption = -1;
                         } else if (chosenMenuOption == 1 && checkItemAmount(usersInventory, "Iron ore") >= usersToolbelt[1]) {
                             removeItemFromInventory("Iron ore", usersToolbelt[1])
-                            usersToolbelt[1] += 1
+                            usersToolbelt[1] += 1;
                             chosenMenuOption = -1;
                         } else if (chosenMenuOption == 2 && checkItemAmount(usersInventory, "Iron ore") >= usersToolbelt[2]) {
                             removeItemFromInventory("Iron ore", usersToolbelt[2])
-                            usersToolbelt[2] += 1
+                            usersToolbelt[2] += 1;
+                            chosenMenuOption = -1;
+                        } else if (chosenMenuOption == 3 && checkItemAmount(usersInventory, "Copper ore") >= usersToolbelt[3]) {
+                            removeItemFromInventory("Copper ore", usersToolbelt[3])
+                            usersToolbelt[3] += 1;
                             chosenMenuOption = -1;
                         } else {
                             textbox.innerHTML = textbox.innerHTML+"<br>"+"You can't upgrade this item your missing the needed items."
                         }
                     } else if (chosenMenuOption > -1) {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no gold or iron ore in your inventory to upgrade your tools or the pocket scanner."
-                        chosenMenuOption = -1
+                        chosenMenuOption = -1;
                     }
                 }
 
@@ -404,24 +429,33 @@
                     gameState = gameStates.BEGIN_SEQUENCE;
                 }
 
-                if (randomSequence.length == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
-                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength)
-                    sequenceDisplayTime = 100
+                if (randomSequence.length <= 0 && gameState == gameStates.BEGIN_SEQUENCE) {
+                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
+                    sequenceDisplayTime = 100;
+                }
+
+                if (randomSequence.length <= 0 && gameState == gameStates.M_BEGIN_SEQUENCE) {
+                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
+                    sequenceDisplayTime = 100;
                 }
                 
-                if (gameState == gameStates.BEGIN_SEQUENCE) {
+                if (gameState == gameStates.BEGIN_SEQUENCE || gameState == gameStates.M_BEGIN_SEQUENCE) {
                     if (sequenceDisplayTime > 0) {
                         // This is to show the sequence for a set amount of time.
                         textbox.innerHTML = textbox.innerHTML+"<br>"+randomSequence
                         sequenceDisplayTime -= 1
                     } else if (sequenceDisplayTime == 0) {
-                        gameState = gameStates.REPEAT_SEQUENCE
+                        if (gameState == gameStates.BEGIN_SEQUENCE) {
+                            gameState = gameStates.REPEAT_SEQUENCE;
+                        } else if (gameState == gameStates.M_BEGIN_SEQUENCE) {
+                            gameState = gameStates.M_REPEAT_SEQUENCE;
+                        }
                     }
                 }
 
                 if (usersSequence.length > 0) {
                     // Adds the users sequence to the texbox output if the sequence has a length.
-                    textbox.innerHTML = textbox.innerHTML+usersSequence
+                    textbox.innerHTML = textbox.innerHTML+"<br>"+usersSequence
                 }
                 
                 if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
@@ -437,7 +471,10 @@
 
                     randomSequence = [];
                     usersSequence = [];
-                    usersPosArray.splice(0, 2);
+                    
+                    if (usersPosArray.length > 0) {
+                        usersPosArray.splice(0, 2);
+                    }
 
                     if (usersPosArray.length <= 0) {
                         // Change the game state back to the main menu
@@ -496,12 +533,12 @@
                             usersInventory[i+1] = usersInventory[i+1]-quantity;
                             return true;
                         } else if (usersInventory[i] == item && usersInventory[i+1] == quantity) {
-                            inventory.splice(i, 2);
+                            usersInventory.splice(i, 2);
                             return true;
                         }
                     }
-                }
                 return false;
+                }
             }
 
             function checkPos(x, y, arrayB, sizeX, sizeY) {
