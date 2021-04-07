@@ -94,6 +94,13 @@
             const nodeSizeX = 20;
             const nodeSizeY = 20;
 
+            // Create an inventory array for the museum to hold the processed items
+            let museumInventory = [];
+
+
+            // Create a variable to hold a number of how long a sequence is.
+            let sequenceLength;
+
             // Create an array to hold the position location of each of the nodes or points of interest that are present within a map.
             let nodePosArray = [];
 
@@ -106,7 +113,7 @@
             let sequenceDisplayTime;
 
             // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
-            let usersInventory = ["Gold ore", 10, "Iron ore", 20];
+            let usersInventory = ["Gold ore", 10, "Iron ore", 20, "Geode", 80, "Geode", 100];
 
             // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
             let usersToolbelt = [1, 1, 1];
@@ -114,9 +121,11 @@
             // Let a variable be equal to 0 to hold the value of which one is selected.
             let selectedMenuOption = 0;
             let selectedOptionDifference = 0;
-            // the chosen menu option will take the value of the selected menu option when the user presses a button like enter or space or uses the mouse.
+
+            // The chosen menu option will take the value of the selected menu option when the user presses a button like enter or space or uses the mouse.
             let chosenMenuOption = -1;
 
+            // A boolean to tell the script to return to the Main menu when possible.
             let menuReturn = false;
 
             // This is a container with all of the possible gameStates that can be assigned to gameState, I use a numerical value for the state variable and have this function to give a name to what that numerical value stands for. I will then also organise these different numbers into groups depending on what they may include or do. Example, tutorial will have several messages that can be displayed to the screen.
@@ -142,14 +151,14 @@
                 BEGIN_GAME: 16,
                 DISPLAY_DIGGOUTS: 17,
                 BEGIN_SEQUENCE: 18,
-                REPEAT_SEQUENCE: 19
+                REPEAT_SEQUENCE: 19,
+                PROCESS_ITEMS: 20,
+                M_BEGIN_SEQUENCE: 21,
+                M_REPEAT_SEQUENCE: 22
             };
 
             // A container for the current state on which the game is at so that the script knows what to do depending on the state.
             let gameState = 0
-
-            //
-            let temp_menu = []
 
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
@@ -285,7 +294,14 @@
                 if (gameState == gameStates.MUSEUM_MENU) {
                     if (usersInventory.length > 0) {
                         // This is the museum menu which will display if the inventory has any contents.
-                        textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption)
+                        if (chosenMenuOption == -1) {
+                            textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption)
+                        } else if (chosenMenuOption == 0) {
+                            gameState = gameStates.PROCESS_ITEMS
+                            chosenMenuOption = -1
+                        } else if (chosenMenuOption == 1) {
+                            textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory
+                        }
                     } else {
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
                         chosenMenuOption = -1
@@ -389,7 +405,7 @@
                 }
 
                 if (randomSequence.length == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
-                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], 5)
+                    randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength)
                     sequenceDisplayTime = 100
                 }
                 
@@ -404,6 +420,7 @@
                 }
 
                 if (usersSequence.length > 0) {
+                    // Adds the users sequence to the texbox output if the sequence has a length.
                     textbox.innerHTML = textbox.innerHTML+usersSequence
                 }
                 
@@ -429,6 +446,29 @@
                         gameState = gameStates.MAIN_MENU;
                     }
                 }
+            }
+
+            function mergeTwoItems(array) {
+                // This is a function that takes two items from an array and combines them, line items in an array with a name, num, name, num structure. I will use this to print out museum and on inventory.
+                let i;
+                let temp_array = [];
+                for (i = 0; i < array.length; i = i+2) {
+                    temp_array.push(array[i]+" "+array[i+1])
+                }
+                return temp_array;
+            }
+
+            function filterArray(main_array, filter) {
+                // Takes a main array and then alters the main array by a filter to be able to present the user with all of the rarer items when in the process screen in the museum.
+                let i;
+                let temp_array = [];
+                for (i = 0; i < main_array.length; i = i+2) {
+                    if (filter.includes(main_array[i]) == false) {
+                        temp_array.push(main_array[i])
+                        temp_array.push(main_array[i+1])
+                    }
+                }
+                return temp_array
             }
 
             function mergeTwoArray(arrayA, arrayB) {
