@@ -473,9 +473,8 @@
 
                     if (gameState == gameStates.M_REPEAT_SEQUENCE) {
                         currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
-                        museumInventory.push(currentProcessItem[0])
-                        museumInventory.push(currentProcessItem[1])
-                        gameState = gameStates.MUSEUM_MENU;
+                        museumInventory.push(currentProcessItem[0]+" - Quality: "+currentProcessItem[1]);
+                        gameState = gameStates.MUSEUM_MENU; // #LEFTOFF#
                     }
 
                     randomSequence = [];
