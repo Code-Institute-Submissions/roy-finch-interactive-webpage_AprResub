@@ -320,12 +320,14 @@
                 if (gameState == gameStates.PROCESS_ITEMS) {
                     textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
                     if (chosenMenuOption > -1) {
-                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption]);
-                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption+1]);
-                        textbox.innerHTML = textbox.innerHTML+currentProcessItem
-                        removeItemFromInventory(filterArray(usersInventory, commonItems)[chosenMenuOption], filterArray(usersInventory, commonItems)[chosenMenuOption+1]);
+                        currentProcessItem = []
+                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
+                        currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
+                        textbox.innerHTML = textbox.innerHTML+" "+currentProcessItem
+                        removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
+                        chosenMenuOption = -1
                         sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
-                        // gameState = gameStates.M_BEGIN_SEQUENCE;
+                        gameState = gameStates.M_BEGIN_SEQUENCE;
                     }
                 }
 
