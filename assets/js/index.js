@@ -57,7 +57,7 @@ let nodeDisplayTime;
 let sequenceDisplayTime;
 
 // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
-let usersInventory = ["Geode", 100];
+let usersInventory = ["Geode", 100, "Iron ore", 20];
 
 // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
 let usersToolbelt = [1, 1, 1, 1];
@@ -288,16 +288,20 @@ function main() {
         // This is the statement which will render the game when the gameState is processItems, initially it will display the list of items that are not common and allow for the user to look thought these items.
         textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
         if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0 && checkItemAmount(usersInventory, filterArray(usersInventory, commonItems)[chosenMenuOption])) {
-            currentProcessItem = [];
-            currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
-            currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
-            removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
-            textbox.innerHTML = textbox.innerHTML+" "+usersInventory
+            currentProcessItem = "";
+            currentProcessItem = (mergeTwoItems(filterArray(usersInventory, commonItems))[chosenMenuOption]);
+            currentProcessItem = currentProcessItem.split(" ");
+            removeUncommonItems(currentProcessItem[0], currentProcessItem[1]);
             chosenMenuOption = -1;
             sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
-            // gameState = gameStates.M_BEGIN_SEQUENCE;
+            gameState = gameStates.M_BEGIN_SEQUENCE;
         }
     }
+
+    if (currentProcessItem == "") {
+        textbox.innerHTML = textbox.innerHTML+" "+usersInventory+" "+currentProcessItem;
+    }
+
     
     if (gameState == gameStates.INVENTORY_SCREEN) {
         if (usersInventory.length > 0) {
@@ -521,7 +525,7 @@ function removeItemFromInventory(item, quantity) {
     let i;
     if (usersInventory.includes(item)) {
         for (i = 0; i < usersInventory.length-1; i = i+2) {
-        if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] > quantity && commonItems.indexOf(item) > -1) {
+        if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] > quantity) {
             usersInventory[i+1] = usersInventory[i+1]-quantity;
             temp_boolean = true;
         } else if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
@@ -530,24 +534,19 @@ function removeItemFromInventory(item, quantity) {
         }
         }
     }
-    // if (usersInventory.includes(item) && commonItems.includes(item)) {
-    //     for (i = 0; i < usersInventory.length; i = i+2) {
-    //         if (usersInventory[i] == item && usersInventory[i+1] > quantity) {
-    //             usersInventory[i+1] = usersInventory[i+1]-quantity;
-    //         } else if (usersInventory[i] == item && usersInventory[i+1] == quantity) {
-    //             usersInventory.splice(i, 2);
-    //         }
-    //     }
-    // } else if (usersInventory.includes(item) && commonItems.indexOf(item) == -1) {
-    //     for (i = 0; i < usersInventory.length; i = i+2) {
-    //         if (usersInventory[i] == item && usersInventory[i+1] == quantity && temp_boolean == false) {
-    //             usersInventory.splice(i, 2);
-    //             temp_boolean = true;
-    //         }
-    //     }
-    // } else {
-    //     return false
-    // }
+}
+
+function removeUncommonItems(item, quality) {
+    let temp_boolean = false;
+    let i;
+    if (usersInventory.includes(item)) {
+        for (i = 0; i < usersInventory.length-1; i = i+2) {
+        if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
+            usersInventory.splice(i, 2);
+            temp_boolean = true;
+        }
+        }
+    }
 }
 
 function checkPos(x, y, arrayB, sizeX, sizeY) {
