@@ -26,7 +26,7 @@
                 width: 60vw;
                 height: 40vh;
                 position: absolute;
-                bottom: 20vh;
+                bottom: 18vh;
                 left: 20vw;
             }
 
@@ -34,6 +34,7 @@
                 border: 1px dashed black;
                 padding: 10px;
                 height: 100%;
+                word-wrap: break-word;
             }
 
             main {
@@ -51,7 +52,7 @@
         </header>
         <main>
             <section>
-                <span id="textbox">Test Text Test Text Test Text Test Text Test Text Test Text</span>
+                <p id="textbox">Test Text</p>
                 <br>
                 <canvas id="display">This element is unsupported.</canvas>
             </section>
@@ -173,6 +174,8 @@
             // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
             const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory. You can see what is in your inventory and then either use a confirm button or escape to come back to the main menu.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "Can you repeat that sequence?", "Which item would you like to process using the processor?"]
+
+            // This is a multi-array of the options that are displayed on the different menus, This will show and present the options that the user can select to do different things.
             const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level ", "Processer || Level "]]
 
             // This is an array of all the common items within the game
@@ -211,6 +214,7 @@
                 /* This is my main function within my script, this will make sure that the parts of the script that are needed will always run. */
                 clear();
 
+                // This will output the corrisponding text which is relevant to the gameState. Their is exactly enough text outputs to match the amount of gameStates that the game can be set to.
                 textbox.innerHTML = textboxMessages[gameState]+" "
 
                 if (keyCode > 0) {
@@ -273,6 +277,7 @@
                             usersAttempts -= 1
                         }
                     }
+                    // Reset the click boolean so that if the conditions are met alter some features of the game, and then reset the boolean as the mouse has been clicked and registered.
                     click = false;
                 }
 
@@ -280,13 +285,16 @@
                     //  This will add a message to the texbox to tell the user how to continue the tutorial. Will also tell the user what they can do to progress the textbox.
                     textbox.innerHTML = textbox.innerHTML+"<br><br>You can use the mouse, spacebar or the enter button to continue."
                     if (chosenMenuOption == 0) {
+                        // This will progress the textbox by altering the game state to the next corrisponding gameState, if the confirm button is clicked. Then using the chosenOption int value turn the value to -1 which is the passive state.
                         gameState += 1;
                         chosenMenuOption = -1;
                     }
                 }
 
                 if (selectedOptionDifference != 0) {
-                    // This will process which of the items on the menu is being selected. This is by checking which menu the user is on and then altering the chosen option difference. It will let me be able to allow the player to select one of the options.
+                    /* This will process which of the items on the menu is being selected. This is by checking which menu the user is on and then altering the chosen option difference. It will let me be able to allow the player to select one of the options.
+                    These are the displays for the menus if the gameState is correct, These use a range function to alter the selected menu option and alter it by a difference , it is prevented from being below 0 or greater than the menuOptions variable .length, which corrisponds to the correct menu.
+                    */
                     if (gameState == gameStates.MAIN_MENU) {
                         selectedMenuOption = range(selectedMenuOption+selectedOptionDifference, 0, MenuOptions[0].length-1);
                     }
@@ -318,25 +326,31 @@
 
                 if (gameState == gameStates.MUSEUM_MENU) {
                     if (usersInventory.length > 0) {
-                        // This is the museum menu which will display if the inventory has any contents.
+                        // This is the museum menu which will display if the inventory has any contents. This will alter the menu depending on what the user does on this menu. The different conditions below are the listed conditions, needed for the menu or gamestate to change.
                         if (chosenMenuOption == -1) {
+                            // Display the menu relevant to the chosen menu option so I can print out two other menus depending on the options.
                             textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(MenuOptions[2], selectedMenuOption);
                         } else if (chosenMenuOption == 0) {
+                            // Change the gameState to process items and reset the chosen menu option to initialize the museum mini-game.
                             gameState = gameStates.PROCESS_ITEMS;
                             chosenMenuOption = -1
                         } else if (chosenMenuOption == 1) {
+                            // This displays the museum inventory and shows that the user has managed to obtain from doing the mini-game and processing the rarer items.
                             textbox.innerHTML = textbox.innerHTML+"<br>"+museumInventory;
                             if (menuReturn) {
+                                // When the user wantes to return from this screen and the menuReturn boolean is true reset the game mode.
                                 gameState = gameStates.MAIN_MENU
                             }
                         }
                     } else {
+                        // This is a text output that will be displayed if the user has no items in there inventory.
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no items that can be processed within the museum."
                         chosenMenuOption = -1;
                     }
                 }
 
                 if (gameState == gameStates.PROCESS_ITEMS) {
+                    // This is the statement which will render the game when the gameState is processItems, initially it will display the list of items that are not common and allow for the user to look thought these items.
                     textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
                     if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0) {
                         currentProcessItem = []
@@ -345,7 +359,8 @@
                         removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
                         chosenMenuOption = -1;
                         sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
-                        gameState = gameStates.M_BEGIN_SEQUENCE;
+                        textbox.innerHTML = textbox.innerHTML+""+usersInventory
+                        // gameState = gameStates.M_BEGIN_SEQUENCE;
                     }
                 }
 
@@ -364,25 +379,31 @@
                         // Check if the user is in the update meny and will display two different outputs depending on whether the player has got an item in their inventory.
                         textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout((mergeTwoArray(MenuOptions[3], usersToolbelt)), selectedMenuOption)
                         if (chosenMenuOption == 0 && checkItemAmount(usersInventory, "Gold ore") >= usersToolbelt[0]) {
+                            // When the conditions are met and user has selected to upgrade their pocket scanner we check for gold and then remove the amount of gold needed to upgrade and increase the usersToolbelt[0] by one. This value represents the pocket scanner and then once that is done we then reset the chosen menu option value to = -1 and allow for them to chose again.
                             removeItemFromInventory("Gold ore", usersToolbelt[0])
                             usersToolbelt[0] += 1;
                             chosenMenuOption = -1;
                         } else if (chosenMenuOption == 1 && checkItemAmount(usersInventory, "Iron ore") >= usersToolbelt[1]) {
                             removeItemFromInventory("Iron ore", usersToolbelt[1])
+                            // When the conditions are met and user has selected to upgrade their pickaxe we check for iron and then remove the amount of iron needed to upgrade and increase the usersToolbelt[1] by one. This value represents the pickaxe and then once that is done we then reset the chosen menu option value to = -1 and allow for them to chose again.
                             usersToolbelt[1] += 1;
                             chosenMenuOption = -1;
                         } else if (chosenMenuOption == 2 && checkItemAmount(usersInventory, "Iron ore") >= usersToolbelt[2]) {
+                            // When the conditions are met and user has selected to upgrade their shovel we check for iron and then remove the amount of iron needed to upgrade and increase the usersToolbelt[2] by one. This value represents the shovel and then once that is done we then reset the chosen menu option value to = -1 and allow for them to chose again.
                             removeItemFromInventory("Iron ore", usersToolbelt[2])
                             usersToolbelt[2] += 1;
                             chosenMenuOption = -1;
                         } else if (chosenMenuOption == 3 && checkItemAmount(usersInventory, "Copper ore") >= usersToolbelt[3]) {
+                            // When the conditions are met and user has selected to upgrade their processor we check for copper and then remove the amount of copper needed to upgrade and increase the usersToolbelt[3] by one. This value represents the pickaxe and then once that is done we then reset the chosen menu option value to = -1 and allow for them to chose again.
                             removeItemFromInventory("Copper ore", usersToolbelt[3])
                             usersToolbelt[3] += 1;
                             chosenMenuOption = -1;
                         } else {
+                            // This is text for if the user doesn't have an item in the inventory yet.
                             textbox.innerHTML = textbox.innerHTML+"<br>"+"You can't upgrade this item your missing the needed items."
                         }
                     } else if (chosenMenuOption > -1) {
+                        // This is a catch to find if the user has selected an option and the actions have not been competed to reset the chosenMenuOption so it is a quick display message to tell the play they dont have the gold or iron and then resets the chosenMenuOption.
                         textbox.innerHTML = textbox.innerHTML+"<br> You have no gold or iron ore in your inventory to upgrade your tools or the pocket scanner."
                         chosenMenuOption = -1;
                     }
@@ -399,6 +420,7 @@
                     // This will check if the gameState is the biome menu and will display the options on the terrain. It will then print out the menu, and then check if the player has selected or chosen an option and change the game state to RENDER TERRAIN, once changed will obtain data on the terrain that has been chosen.
                     textbox.innerHTML = textbox.innerHTML+MenuPrintout(partialArrayOutput(MenuOptions[1], usersToolbelt[0]), selectedMenuOption);
                     if (chosenMenuOption != -1) {
+                        // Once the user selects the correct biome then I generate a biome for them using this selected type and then also begin to set up the other variables. User attempts = 2 + the pocket scanner level, the nodeDisplayTime = 100 and will show the nodes based on if the nodeDisplayTime > 0. sequenceLength = range which is either a base of 4 + the pocket scanner - Rounded(pickaxe level & shovel level) divided by 2. But can not go below 2 or above 12
                         gameState = gameStates.RENDER_TERRAIN; // GameState change to RENDER TERRAIN
                         biomeType = getBiomeVal(MenuOptions[1][chosenMenuOption]);
                         nodeDisplayTime = 100;
@@ -408,13 +430,14 @@
                 }
 
                 if (gameState == gameStates.RENDER_TERRAIN) {
-                    // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built. Also generate a series of Positions for the nodes.
+                    // Generate the terrain when a biome is chosen, and change the game state to a state to explain the terrain has been built. Also generate a series of Positions for the nodes. And change the game state to display the nodes.
                     mapArray = mapGenerator(biomeType[0], biomeType[1], biomeType[2], MapSizeX, MapSizeY);
                     nodePosArray = nodeGenerator((usersAttempts*2));
                     gameState = gameStates.RENDER_NODES // gameState is equal to display nodes
                 }
 
                 if (gameState == gameStates.RENDER_NODES || gameState == gameStates.REPEAT_SEQUENCE) {
+                    // Change the nodeDisplayTime negatively by 1 overtime. If the nodeDisplayTime equal to 0 then change the gameState to beginGame.
                     if (nodeDisplayTime > 0) {
                         nodeDisplayTime -= 1
                     } else if (nodeDisplayTime == 0) {
@@ -423,10 +446,12 @@
                 }
 
                 if (gameState == gameStates.BEGIN_GAME && usersAttempts == 0) {
+                    // Display the locations of where the user has selected once they have ran out of attempts.
                     gameState = gameStates.DISPLAY_DIGGOUTS;
                 }
 
                 if (usersAttempts > 0) {
+                    // If the userAttempts is greater than and not equal to 0 display the users attempts on the texbox.
                     textbox.innerHTML = textbox.innerHTML+"<br>You have got "+usersAttempts+" attempts remaining.";
                 }
 
@@ -446,15 +471,18 @@
                 }
 
                 if (gameState == gameStates.DISPLAY_DIGGOUTS) {
+                    // Once the gameState has changed to display digouts then begin the sequence mini-game
                     gameState = gameStates.BEGIN_SEQUENCE;
                 }
 
                 if (randomSequence.length < sequenceLength && gameState == gameStates.BEGIN_SEQUENCE) {
+                    // This will only activate if the randomSequence length is greater than 0 and the gameState is equal to begin sequence. This creates a random sequence using the W A S D characters and creates this random sequence to the length of the sequenceLength and will change the displayTime to 100 which will be negatively change by -1 overtime.
                     randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
                     sequenceDisplayTime = 100;
                 }
 
                 if (randomSequence.length < sequenceLength && gameState == gameStates.M_BEGIN_SEQUENCE) {
+                    // On the other hand this sequence will begin with the same initial condition but only if the gameState is equal to the Museum Begin Sequence, M_BEGIN_SEQUENCE. This creates a random sequence using the W A S D characters and creates this random sequence to the length of the sequenceLength and will change the displayTime to 100 which will be negatively change by -1 overtime.
                     randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
                     sequenceDisplayTime = 100;
                 }
@@ -484,26 +512,31 @@
                     textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence."
 
                     if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true && usersPosArray.length > 0) {
+                        // Check if the user has managed to click on a location where there is a node. If they have managed to give them a random item from the biomeType. If not just give them a random item from the NA type which is a basic random range of common items.
                         addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence));
                     } else {
                         addRandomItem("NA",ArraySimilarity(usersSequence, randomSequence));
                     }
 
                     if (gameState == gameStates.M_REPEAT_SEQUENCE) {
+                        // This is what happens when the gameState is set to the M_REPEAT_SEQUENCE and these actions are what happens due to it. Create an average of the percentage of the actual items current quality by the new quality obtained though the mini-game. Once that is done then you can add the item to the inventory of the museum and the gameState back to the main men.
                         currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
                         museumInventory.push(currentProcessItem[0]+" - Quality: "+currentProcessItem[1]);
                         gameState = gameStates.MUSEUM_MENU;
                     }
 
+                    // This resets both of the sequence arrays to empty for the next sequence or next time.
+
                     randomSequence = [];
                     usersSequence = [];
                     
                     if (usersPosArray.length > 0) {
+                        // Remove the position from the usersPosArray to work though the different locations the user has pressed.
                         usersPosArray.splice(0, 2);
                     }
 
-                    if (usersPosArray.length <= 0) {
-                        // Change the game state back to the main menu
+                    if (usersPosArray.length <= 0 && gameState == gameStates.REPEAT_SEQUENCE) {
+                        // Change the game state to see if its repeat sequence and if the users pos array length is equal to 0 then reset the different variables and then go back to the main-menu.
                         mapArray = [];
                         chosenMenuOption = -1;
                         gameState = gameStates.MAIN_MENU;
@@ -535,6 +568,7 @@
             }
 
             function mergeTwoArray(arrayA, arrayB) {
+                // Take one main array A and another array B and then take both items from the array and merge them, example, arraya[0]+" "+arrayb[0];
                 let i;
                 let temp_array = []
                 for (i = 0; i < arrayA.length; i++) {
@@ -553,6 +587,7 @@
             }
 
             function removeItemFromInventory(item, quantity) {
+                // Check if the user has got the item and the item is not common and then remove the item depending on how much of the item I am after removing. If the item is uncommon then remove the item from the inventory.
                 let temp_boolean = false;
                 if (usersInventory.includes(item) && commonItems.includes(item)) {
                     for (i = 0; i < usersInventory.length; i = i+2) {
@@ -932,6 +967,7 @@
             }
 
             function mapRender(multi_array, biomeColor, MaxX, MaxY, SizeX, SizeY) {
+                // This takes the multi-array of values and then a biome color which is stored in the biomeType function and then will generate the tiles depending on the sizes and maximums of X and Y.
                 let x, y;
                 for (x = 0; x < MaxX; x++) {
                     for (y = 0; y < MaxY; y++) {
