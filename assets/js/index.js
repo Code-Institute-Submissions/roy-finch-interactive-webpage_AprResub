@@ -109,7 +109,7 @@ let gameState = 0;
 
 // These are constant arrays of text outputs that will be displayed on the textbox and also the menu options when relevent.
 
-const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory. You can see what is in your inventory and then either use a confirm button or escape to come back to the main menu.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "Can you repeat that sequence?", "Which item would you like to process using the processor?"];
+const textboxMessages = ["Welcome to Dig Up! This is a game based around finding things from different terrains. There are three mini-games within this game.", "You can use the W and S key to navigate through the menus that you'll be displayed, and the item on which is currently selected will be in bold.", "You will be able to select a terrain by going into the World Map and then selecting the type of terrain you would like to use. Different terrains have different items which you can obtain. More information about this is on the help page. Also you can unlock different terrains which will give you different items or more items depending on the terrain type. ", "Once you begin the game you will be shown a series of black tiles, (points-of-interest), which will display for around 4 seconds and then will disappear. The job is to try and click your mouse cursor over the locations that where displayed. If you successfully do this you will gain rarer items which can have a chance to be processed in the museum.", "Once you have used up all your attempts then you will be shown a series of random sequences with a set length, (the length increases as you play the game), depending on how well you repeat these sequences will effect the items you get. Rare items will have an overal quality and this is determind by how well you repeat this sequence. The sequence will consist of W,A,S and D characters that can be typed in once the sequence has been removed from the screen.", "Within the museum you can be able to process specific items, these items can not be stacked and have a quality. You will then be able to go though a 'processing' system to be able to put them in the museum. To do this you need to complete another sequence, which then also alters and changes the quality further.", "You can also use the Inventory tab just to see what is in your inventory. You can see what is in your inventory and then either use a confirm button or escape to come back to the main menu.", "Lastly, the upgrade tab is used to upgrade any of your current tools that you use. The scanner is upgraded using gold ore, and the pickaxe and shovel are upgraded using iron ore. You must keep in mind that the level of the scanner will give you more attempts and possibly new terrain types. Whilst upgrading the tools will decrease the sequence lengths.", "If you have entered the wrong menu you can still use escape to come back to the main menu. Although you can not leave a game when it is playing.", "Use W and S to select what you want to do on the Main Menu. Once you see the item is bold, its selected and then click either the mouse, spacebar or enter to confirm.", "This is a list of the terrain types that you can currently access at your level.", "Welcome to the Museum, you can either see what items you have already processed or begin processing items if you have any.", "This is the inventory screen.", "This is the upgrades page, if you have any items you maybe able to upgrade your tools. <br> Gold ore is needed to upgrade the scanner. <br> Iron ore is needed to upgrade the tools. <br> Copper ore can be used to upgrade the processor, which effects the length of the sequnce in the process mini-game. <br> The amount of materials needed will increase depending on the level they are at.", "Terrain is being generated.", "You will be shown the points interest that are on the map. Try and remember these locations.", "Use your attempts to place down where you want to dig. When an attempt has been deducted that location has been added.", "Sequence is being created", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?", "Which item would you like to process using the processor?", "This is the sequence that you need to try and remember.", "Can you repeat that sequence?"];
 
 // This is a multi-array of the options that are displayed on the different menus, This will show and present the options that the user can select to do different things.
 const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level ", "Processer || Level "]];
@@ -286,22 +286,21 @@ function main() {
     
     if (gameState == gameStates.PROCESS_ITEMS) {
         // This is the statement which will render the game when the gameState is processItems, initially it will display the list of items that are not common and allow for the user to look thought these items.
-        textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption)+""+currentProcessItem;
-        if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0 && checkItemAmount(usersInventory, filterArray(usersInventory, commonItems)[chosenMenuOption])) {
+        textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption);
+        if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0) {
             currentProcessItem = "";
-            currentProcessItem = (mergeTwoItems(filterArray(usersInventory, commonItems))[chosenMenuOption]);
-            currentProcessItem = currentProcessItem.split(" ");
+            currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
+            currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
             removeUncommonItems(currentProcessItem[0], currentProcessItem[1]);
             chosenMenuOption = -1;
             sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
             gameState = gameStates.M_BEGIN_SEQUENCE;
         }
+        if (menuReturn) {
+            gameState = gameStates.MAIN_MENU;
+            menuReturn = false;
+        }
     }
-
-    if (currentProcessItem == "") {
-        textbox.innerHTML = textbox.innerHTML+" "+usersInventory+" "+currentProcessItem;
-    }
-
     
     if (gameState == gameStates.INVENTORY_SCREEN) {
         if (usersInventory.length > 0) {
@@ -309,6 +308,11 @@ function main() {
             textbox.innerHTML = textbox.innerHTML+"<br>"+usersInventory;
         } else {
             textbox.innerHTML = textbox.innerHTML+"<br> There is no items within the inventory to display.";
+            chosenMenuOption = -1;
+        }
+
+        if (chosenMenuOption > -1) {
+            gameState = gameStates.MAIN_MENU;
             chosenMenuOption = -1;
         }
     }
@@ -414,19 +418,20 @@ function main() {
         gameState = gameStates.BEGIN_SEQUENCE;
     }
     
-    if (randomSequence.length < sequenceLength && (gameState == gameStates.BEGIN_SEQUENCE || gameState == gameStates.M_BEGIN_SEQUENCE)) {
+    if (randomSequence.length < sequenceLength && gameState == gameStates.BEGIN_SEQUENCE) {
         // This will only activate if the randomSequence length is greater than 0 and the gameState is equal to begin sequence. This creates a random sequence using the W A S D characters and creates this random sequence to the length of the sequenceLength and will change the displayTime to 100 which will be negatively change by -1 overtime.
         randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
         sequenceDisplayTime = 100;
     }
 
-    if (sequenceDisplayTime > 0) {
+    if (sequenceDisplayTime > 0 && gameState == gameStates.BEGIN_SEQUENCE) {
         sequenceDisplayTime -= 1;
+        textbox.innerHTML = textbox.innerHTML+"<br><br>"+randomSequence;
     }
     
-    if (sequenceDisplayTime == 0 && (gameState == gameStates.BEGIN_SEQUENCE || gameState == gameStates.M_BEGIN_SEQUENCE)) {
+    if (sequenceDisplayTime == 0 && (gameState == gameStates.BEGIN_SEQUENCE)) {
         // This is to show the sequence for a set amount of time.
-        textbox.innerHTML = textbox.innerHTML+"<br><br>"+randomSequence;
+        textbox.innerHTML = textbox.innerHTML+"<br><br>";
         if (gameState == gameStates.BEGIN_SEQUENCE) {
             gameState = gameStates.REPEAT_SEQUENCE;
         } else {
@@ -434,16 +439,13 @@ function main() {
         }
     }
     
-    if (usersSequence.length > 0) {
+    if (usersSequence.length > 0 && (gameState == gameStates.REPEAT_SEQUENCE)) {
         // Adds the users sequence to the texbox output if the sequence has a length.
         textbox.innerHTML = textbox.innerHTML+"<br><br>"+usersSequence;
     }
     
     if (usersSequence.length == randomSequence.length && usersSequence.length > 0) {
         // add a function to test if both variables are the same. Once you test that we add random item depending on the biome and then remove the first two positions from the usersPos array and then empty the sequence arrays and then check if the users pos array is now empty. If empty we change the game mode.
-        
-        textbox.innerHTML = textbox.innerHTML+"<br> You have managed to get "+ArraySimilarity(usersSequence, randomSequence)+" % accuracy within repeating that sequence.";
-        
         if (checkPos(usersPosArray[0], usersPosArray[1], nodePosArray, nodeSizeX, nodeSizeY) == true && usersPosArray.length > 0) {
             // Check if the user has managed to click on a location where there is a node. If they have managed to give them a random item from the biomeType. If not just give them a random item from the NA type which is a basic random range of common items.
             addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence));
