@@ -292,13 +292,12 @@ function main() {
             currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
             currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
             removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
+            textbox.innerHTML = textbox.innerHTML+" "+usersInventory
             chosenMenuOption = -1;
             sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
-            sequenceDisplayTime = 100;
+            // gameState = gameStates.M_BEGIN_SEQUENCE;
         }
     }
-    
-    textbox.innerHTML = textbox.innerHTML+" "+gameState+" "+sequenceDisplayTime;
     
     if (gameState == gameStates.INVENTORY_SCREEN) {
         if (usersInventory.length > 0) {
@@ -416,12 +415,14 @@ function main() {
         randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
         sequenceDisplayTime = 100;
     }
+
+    if (sequenceDisplayTime > 0) {
+        sequenceDisplayTime -= 1;
+    }
     
-    if (sequenceDisplayTime > 0 && (gameState == gameStates.BEGIN_SEQUENCE ||gameState == gameStates.M_BEGIN_SEQUENCE)) {
+    if (sequenceDisplayTime == 0 && (gameState == gameStates.BEGIN_SEQUENCE || gameState == gameStates.M_BEGIN_SEQUENCE)) {
         // This is to show the sequence for a set amount of time.
         textbox.innerHTML = textbox.innerHTML+"<br><br>"+randomSequence;
-        sequenceDisplayTime -= 1;
-    } else if (sequenceDisplayTime == 0) {
         if (gameState == gameStates.BEGIN_SEQUENCE) {
             gameState = gameStates.REPEAT_SEQUENCE;
         } else {
@@ -519,12 +520,13 @@ function removeItemFromInventory(item, quantity) {
     let temp_boolean = false;
     let i;
     if (usersInventory.includes(item)) {
-        for (i = 0; i < usersInventory.length; i = i+2) {
+        for (i = 0; i < usersInventory.length-1; i = i+2) {
         if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] > quantity && commonItems.indexOf(item) > -1) {
             usersInventory[i+1] = usersInventory[i+1]-quantity;
             temp_boolean = true;
         } else if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
             usersInventory.splice(i, 2);
+            temp_boolean = true;
         }
         }
     }

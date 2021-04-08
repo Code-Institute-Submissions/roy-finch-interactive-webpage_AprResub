@@ -22,7 +22,7 @@ canvas {
     left: 20vw;
 }
 
-section {
+div {
     border: 1px dashed black;
     padding: 10px;
     height: 100%;
