@@ -32,3 +32,4 @@ Also updated the menus and create a message that will be displayed on the invent
 I have added the data sheets for this game. There are different biomes, rarities to items and now also the ability to find locations on the map that give you better items than if you select a part of the terrain which was not a point of interest.
 I ave ran into an issue with the sequence finalising...
 Added basic information to the help page so that I can create a CSS style which is similar to my main page.
+I am going to externalise each of the different files and make sure that the files are all checked by language checkers.
