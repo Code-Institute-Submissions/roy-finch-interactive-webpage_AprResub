@@ -57,7 +57,7 @@ let nodeDisplayTime;
 let sequenceDisplayTime;
 
 // Create an empty array which will be used as the inventory, it will hold the values as a name "" - string and then a number, which will be the quantity or the percentage of how well the item was obtained.
-let usersInventory = ["Geode", 100, "Iron ore", 20];
+let usersInventory = ["Gold ore", 20, "Iron ore", 20, "Copper ore", 20];
 
 // This will be used later as a way of ungrading the users tools what they use to give them more attempts, and less of a length on the overal sequences.
 let usersToolbelt = [1, 1, 1, 1];
@@ -115,7 +115,7 @@ const textboxMessages = ["Welcome to Dig Up! This is a game based around finding
 const MenuOptions = [["World Map", "Museum", "Inventory", "Upgrade"],["Dirty Plain", "Plains", "Desert", "Forest", "Swamp", "Mountain", "Taiga", "Jungle", "Red Desert", "Savannah"], ["Process", "View Museum"], ["Pocket Scanner || Level ", "Pickaxe || Level ", "Shovel || Level ", "Processer || Level "]];
 
 // This is an array of all the common items within the game
-const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli", "Amber"];
+const commonItems = ["Dirt", "Stone", "Gold ore", "Iron ore", "Copper ore", "Sand", "Lapis Lazuli"];
 
 function init() {
     // This function will be used when the page loads and will start or "(init)ialize" the rest of the needed programs.
@@ -164,21 +164,27 @@ function main() {
         }
         if (keyCode == 83) {
         // Check if the keycode is S, if the gameState is repeat sequence then add S to the users sequence. If not and the user is in a menu, change the option difference. Meaning that I can apply a positive difference to the currently selected option to move the selected option to a different location.
-            if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
+            if (gameState == gameStates.REPEAT_SEQUENCE) {
                 usersSequence.push("S");
-            } else {
+            } else if (gameState == gameStates.M_REPEAT_SEQUENCE) {
+                usersSequence.push("S");
+            }else {
                 selectedOptionDifference = 1;
             }
         }
         if (keyCode == 65) {
         // This checks if the keycode is A, and adds it to the sequence array if the gamestate is repeat sequence.
-            if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
+            if (gameState == gameStates.REPEAT_SEQUENCE) {
+                usersSequence.push("A");
+            } else if (gameState == gameStates.M_REPEAT_SEQUENCE) {
                 usersSequence.push("A");
             }
         }
         if (keyCode == 68) {
         // This checks if the keycode is D, and adds it to the sequence array if the gamestate is repeat sequence.
-            if (gameState == gameStates.REPEAT_SEQUENCE || gameState == gameStates.M_REPEAT_SEQUENCE) {
+            if (gameState == gameStates.REPEAT_SEQUENCE) {
+                usersSequence.push("D");
+            } else if (gameState == gameStates.M_REPEAT_SEQUENCE) {
                 usersSequence.push("D");
             }
         }
@@ -287,19 +293,48 @@ function main() {
     if (gameState == gameStates.PROCESS_ITEMS) {
         // This is the statement which will render the game when the gameState is processItems, initially it will display the list of items that are not common and allow for the user to look thought these items.
         textbox.innerHTML = textbox.innerHTML+"<br>"+MenuPrintout(mergeTwoItems(filterArray(usersInventory, commonItems)), selectedMenuOption);
-        if (chosenMenuOption > -1 && filterArray(usersInventory, commonItems).length > 0) {
-            currentProcessItem = "";
+        if (chosenMenuOption > -1 && (filterArray(usersInventory, commonItems)).length > 0) {
+            // This will initialize a mini-game to process the items that the user has.
+            currentProcessItem = [];
             currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2]);
-            currentProcessItem.push(filterArray(usersInventory, commonItems)[chosenMenuOption*2+1]);
-            removeUncommonItems(currentProcessItem[0], currentProcessItem[1]);
+            currentProcessItem.push(parseInt(filterArray(usersInventory, commonItems)[(chosenMenuOption*2)+1]));
+            removeItemFromInventory(currentProcessItem[0], currentProcessItem[1]);
             chosenMenuOption = -1;
-            sequenceLength = range(5+usersToolbelt[0]-usersToolbelt[3], 3, 12);
+            sequenceLength = range(5-Math.round((usersToolbelt[0]+usersToolbelt[3])/2), 3, 12);
             gameState = gameStates.M_BEGIN_SEQUENCE;
         }
         if (menuReturn) {
+            // Return the user to the main menu if they press the escape button.
             gameState = gameStates.MAIN_MENU;
             menuReturn = false;
         }
+    }
+
+    if (usersSequence.length > 0 && gameState == gameStates.M_REPEAT_SEQUENCE) {
+        // Display the text of the users sequence when they have began to input the characters.
+        textbox.innerHTML = textbox.innerHTML+"<br><br><br><br>"+usersSequence;
+    }
+
+    if (sequenceDisplayTime > 0 && gameState == gameStates.M_BEGIN_SEQUENCE) {
+        // This will deduct 1 value from the display time until it equals 0 then change the game mode.
+        textbox.innerHTML = textbox.innerHTML+"<br><br>"+randomSequence;
+        sequenceDisplayTime -= 1;
+        if (sequenceDisplayTime == 0) {
+            gameState = gameStates.M_REPEAT_SEQUENCE;
+        }
+    }
+
+    if (gameState == gameStates.M_BEGIN_SEQUENCE && randomSequence.length < sequenceLength) {
+        // This will create a random sequence for the museum mini-game.
+        sequenceDisplayTime = 100;
+        randomSequence = sequenceGenerator(["W", "A", "S", "D"], sequenceLength);
+    }
+
+    if (gameState == gameStates.M_REPEAT_SEQUENCE && usersSequence.length == randomSequence.length && usersSequence.length > 0) {
+        // This is what happens when the gameState is set to the M_REPEAT_SEQUENCE and these actions are what happens due to it. Create an average of the percentage of the actual items current quality by the new quality obtained though the mini-game. Once that is done then you can add the item to the inventory of the museum and the gameState back to the main men.
+        currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
+        museumInventory.push(currentProcessItem[0]+" - Quality: "+currentProcessItem[1]);
+        gameState = gameStates.MUSEUM_MENU;
     }
     
     if (gameState == gameStates.INVENTORY_SCREEN) {
@@ -429,17 +464,15 @@ function main() {
         textbox.innerHTML = textbox.innerHTML+"<br><br>"+randomSequence;
     }
     
-    if (sequenceDisplayTime == 0 && (gameState == gameStates.BEGIN_SEQUENCE)) {
+    if (sequenceDisplayTime == 0 && gameState == gameStates.BEGIN_SEQUENCE) {
         // This is to show the sequence for a set amount of time.
         textbox.innerHTML = textbox.innerHTML+"<br><br>";
         if (gameState == gameStates.BEGIN_SEQUENCE) {
             gameState = gameStates.REPEAT_SEQUENCE;
-        } else {
-            gameState = gameStates.M_REPEAT_SEQUENCE;
         }
     }
     
-    if (usersSequence.length > 0 && (gameState == gameStates.REPEAT_SEQUENCE)) {
+    if (usersSequence.length > 0 && gameState == gameStates.REPEAT_SEQUENCE) {
         // Adds the users sequence to the texbox output if the sequence has a length.
         textbox.innerHTML = textbox.innerHTML+"<br><br>"+usersSequence;
     }
@@ -451,13 +484,6 @@ function main() {
             addRandomItem(biomeType[4],ArraySimilarity(usersSequence, randomSequence));
         } else {
             addRandomItem("NA",ArraySimilarity(usersSequence, randomSequence));
-        }
-        
-        if (gameState == gameStates.M_REPEAT_SEQUENCE) {
-            // This is what happens when the gameState is set to the M_REPEAT_SEQUENCE and these actions are what happens due to it. Create an average of the percentage of the actual items current quality by the new quality obtained though the mini-game. Once that is done then you can add the item to the inventory of the museum and the gameState back to the main men.
-            currentProcessItem[1] = Math.round((ArraySimilarity(usersSequence, randomSequence)+currentProcessItem[1])/2);
-            museumInventory.push(currentProcessItem[0]+" - Quality: "+currentProcessItem[1]);
-            gameState = gameStates.MUSEUM_MENU;
         }
         
         // This resets both of the sequence arrays to empty for the next sequence or next time.
@@ -526,27 +552,15 @@ function removeItemFromInventory(item, quantity) {
     let temp_boolean = false;
     let i;
     if (usersInventory.includes(item)) {
+        // Within this function it checks if the item has got a rarity instead of an quantity and checks to remove the item first before deducting its value.
         for (i = 0; i < usersInventory.length-1; i = i+2) {
-        if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] > quantity) {
-            usersInventory[i+1] = usersInventory[i+1]-quantity;
-            temp_boolean = true;
-        } else if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
-            usersInventory.splice(i, 2);
-            temp_boolean = true;
-        }
-        }
-    }
-}
-
-function removeUncommonItems(item, quality) {
-    let temp_boolean = false;
-    let i;
-    if (usersInventory.includes(item)) {
-        for (i = 0; i < usersInventory.length-1; i = i+2) {
-        if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
-            usersInventory.splice(i, 2);
-            temp_boolean = true;
-        }
+            if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] == quantity) {
+                usersInventory.splice(i, 2);
+                temp_boolean = true;
+            } else if (temp_boolean == false && usersInventory[i] == item && usersInventory[i+1] > quantity && commonItems.indexOf(item) > -1) {
+                usersInventory[i+1] = usersInventory[i+1]-quantity;
+                temp_boolean = true;
+            }
         }
     }
 }
